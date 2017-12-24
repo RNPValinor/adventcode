@@ -125,6 +125,11 @@ namespace _2016.Answers
             return number.ToString()[0];
         }
 
+        private char NewConvertPos()
+        {
+            
+        }
+
         void IAnswer.PartOne()
         {
             this.Init();
@@ -148,7 +153,15 @@ namespace _2016.Answers
         {
             this.Init();
 
-            this.pos = 
+            this.pos = new Point(0, 2);
+
+            foreach (var move in moves)
+            {
+                foreach (var dir in move)
+                {
+                    this.NewMove(dir);
+                }
+            }
         }
     }
 }
