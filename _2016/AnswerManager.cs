@@ -28,6 +28,9 @@ namespace _2016
                 case "2":
                     this.answer = new Day2Answer();
                     break;
+                case "3":
+                    this.answer = new Day3Answer();
+                    break;
                 default:
                     throw new ArgumentException("Invalid day: " + day);
             }

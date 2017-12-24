@@ -127,7 +127,30 @@ namespace _2016.Answers
 
         private char NewConvertPos()
         {
-            
+            switch (this.pos.Y)
+            {
+                case 0:
+                    return '1';
+                case 4:
+                    return 'D';
+                case 1:
+                    return (this.pos.X + 1).ToString()[0];
+                case 2:
+                    return (this.pos.X + 5).ToString()[0];
+                case 3:
+                    switch (this.pos.X)
+                    {
+                        case 1:
+                            return 'A';
+                        case 2:
+                            return 'B';
+                        case 3:
+                            return 'C';
+                    }
+                    break;
+            }
+
+            throw new ArgumentOutOfRangeException("Invalid co-ordinates: " + this.pos.ToString());
         }
 
         void IAnswer.PartOne()
@@ -154,6 +177,7 @@ namespace _2016.Answers
             this.Init();
 
             this.pos = new Point(0, 2);
+            var num = "";
 
             foreach (var move in moves)
             {
@@ -161,7 +185,11 @@ namespace _2016.Answers
                 {
                     this.NewMove(dir);
                 }
+
+                num = num + this.NewConvertPos();
             }
+
+            Console.WriteLine("New code is " + num);
         }
     }
 }
