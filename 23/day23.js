@@ -59,57 +59,32 @@ fs.readFile('23/instructions.txt', (err, data) => {
     console.error(err)
     process.exit()
   }
-
-  let instructions = data.toString().split('\n')
-  let program = {
-    id: 0,
-    registers: { a: 1 },
-    position: 0
-  }
-
-  // while (program.position >= 0 && program.position < instructions.length) {
-  //   runCommand(program, instructions[program.position])
-
-  //   console.log('Got position ' + program.position)
-  // }
-
-  // console.log('Val in h ' + program.registers.h)
 })
 
 let b = 105700
 let c = 122700
-let d = 0
-let e = 0
-let f = 0
-let g = 0
 let h = 0
 
-do {
-  // Runs 1000 times
-  f = 1
-  d = 2
-  do {
-    e = 2
-    for (let n = 0; n < (b - e); n++) {
-      // Runs 105698 times
-      if ((g - d) * e === b) {
-        f = 0
-      }
-      e++
-      g = e - b
+let primes = []
+for (let i = 0; i < c; i++) {
+  primes[i] = true
+}
+
+var limit = Math.sqrt(c)
+for (var i = 2; i < limit; i++) {
+  if (primes[i] === true) {
+    for (var j = i * i; j < c; j += i) {
+      primes[j] = false
     }
-    g = 0
-    d--
-    g = d - b
-  } while (g !== 0)
-  if (f === 0) {
+  }
+}
+
+for (b = 105700; b !== c; b += 17) {
+  if (!primes[b]) {
     h++
   }
-  g = b - c
-  if (g === 0) {
-    b += 17
-  } else {
-    console.log('Got h ' + h)
-    process.exit()
-  }
-} while (true)
+}
+
+console.log('Got h ' + h)
+
+// h > 914
