@@ -21,19 +21,8 @@ namespace _2016
                     break;
             }
 
-            switch (day) {
-                case "1":
-                    this.answer = new Day1Answer();
-                    break;
-                case "2":
-                    this.answer = new Day2Answer();
-                    break;
-                case "3":
-                    this.answer = new Day3Answer();
-                    break;
-                default:
-                    throw new ArgumentException("Invalid day: " + day);
-            }
+            var type = Type.GetType("_2016.Answers.Day" + day + "Answer");
+            this.answer = (IAnswer)Activator.CreateInstance(type);
         }
 
         public void Run() {
