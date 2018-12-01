@@ -5,7 +5,7 @@ using _2018.Utils;
 
 namespace _2018
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
