@@ -9,8 +9,6 @@ namespace _2018.Days
     {
         public void Run()
         {
-            ConsoleUtils.WriteColouredLine("Running day 1", ConsoleColor.DarkGreen);
-
             var steps = QuestionLoader.Load(1).Split(Environment.NewLine).Select(int.Parse).ToList();
             
             var seenFrequencies = new HashSet<int>();

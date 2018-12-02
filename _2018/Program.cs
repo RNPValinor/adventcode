@@ -59,6 +59,8 @@ namespace _2018
                     app.ShowHint();
                     return 0;
                 }
+                
+                ConsoleUtils.WriteColouredLine($"Running day {dayToRun}", ConsoleColor.DarkGreen);
 
                 dayAnswer.Run();
 
