@@ -7,10 +7,27 @@ namespace _2018.Days
 {
     public class Day1 : Day
     {
-        protected override void DoSolution()
+        private readonly List<int> _steps;
+        
+        public Day1()
         {
-            var steps = QuestionLoader.Load(1).Split(Environment.NewLine).Select(int.Parse).ToList();
+            this._steps = QuestionLoader.Load(1).Split(Environment.NewLine).Select(int.Parse).ToList();
+        }
+        
+        protected override void DoPart1()
+        {
+            var frequency = 0;
+
+            foreach (var t in this._steps)
+            {
+                frequency += t;
+            }
             
+            ConsoleUtils.WriteColouredLine($"Target frequency (part 1) is {frequency}", ConsoleColor.Cyan);
+        }
+        
+        protected override void DoPart2()
+        {
             var seenFrequencies = new HashSet<int>();
             var frequency = 0;
             var i = 0;
@@ -18,11 +35,11 @@ namespace _2018.Days
             while (!seenFrequencies.Contains(frequency))
             {
                 seenFrequencies.Add(frequency);
-                frequency += steps[i];
-                i = (i + 1) % steps.Count;
+                frequency += this._steps[i];
+                i = (i + 1) % this._steps.Count;
             }
             
-            ConsoleUtils.WriteColouredLine($"Target frequency is {frequency}", ConsoleColor.Cyan);
+            ConsoleUtils.WriteColouredLine($"Target frequency (part 2) is {frequency}", ConsoleColor.Cyan);
         }
     }
 }

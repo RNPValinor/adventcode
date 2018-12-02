@@ -1,30 +1,49 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using MinimumEditDistance;
 using _2018.Utils;
 
 namespace _2018.Days
 {
     public class Day2 : Day
     {
-        protected override void DoSolution()
+        private readonly List<string> _ids;
+        
+        public Day2()
         {
-            var ids = QuestionLoader.Load(2).Split(Environment.NewLine).ToList();
-
+            this._ids = QuestionLoader.Load(2).Split(Environment.NewLine).ToList();
+        }
+        
+        protected override void DoPart1()
+        {
             var numPairs = 0;
             var numTriples = 0;
 
-            foreach (var id in ids)
+            foreach (var id in this._ids)
             {
-                var frequencyLookup = GetLetterFrequencies(id);
+                var frequencies = GetLetterFrequencies(id);
+                var hasPair = false;
+                var hasTriple = false;
 
-                if (frequencyLookup.ContainsKey(2))
+                foreach (var f in frequencies)
+                {
+                    switch (f)
+                    {
+                        case 2:
+                            hasPair = true;
+                            break;
+                        case 3:
+                            hasTriple = true;
+                            break;
+                    }
+                }
+
+                if (hasPair)
                 {
                     numPairs++;
                 }
 
-                if (frequencyLookup.ContainsKey(3))
+                if (hasTriple)
                 {
                     numTriples++;
                 }
@@ -33,18 +52,19 @@ namespace _2018.Days
             var checksum = numPairs * numTriples;
             
             ConsoleUtils.WriteColouredLine($"Checksum is {checksum}", ConsoleColor.Cyan);
-
-            while (ids.Any())
+        }
+        
+        protected override void DoPart2()
+        {
+            while (this._ids.Any())
             {
                 // Check each ID to see if it closely matches any other ID, and remove it from the set if it does not.
-                var id = ids[0];
-                ids.RemoveAt(0);
+                var id = this._ids[0];
+                this._ids.RemoveAt(0);
 
-                foreach (var entry in ids)
+                foreach (var entry in this._ids)
                 {
-                    var distance = Levenshtein.CalculateDistance(id, entry, 1);
-
-                    if (distance == 1)
+                    if (NumDifferentChars(id, entry) == 1)
                     {
                         ConsoleUtils.WriteColouredLine($"Found similar IDs {id} and {entry}", ConsoleColor.Cyan);
                         return;
@@ -53,7 +73,12 @@ namespace _2018.Days
             }
         }
 
-        private static IDictionary<int, HashSet<char>> GetLetterFrequencies(string id)
+        private static int NumDifferentChars(string str1, string str2)
+        {
+            return str1.Where((t, i) => t != str2[i]).Count();
+        }
+
+        private static IEnumerable<int> GetLetterFrequencies(string id)
         {
             var frequencies = new Dictionary<char, int>();
 
@@ -71,21 +96,7 @@ namespace _2018.Days
                 }
             }
 
-            var frequencyLookup = new Dictionary<int, HashSet<char>>();
-
-            foreach (var entry in frequencies)
-            {
-                if (!frequencyLookup.ContainsKey(entry.Value))
-                {
-                    frequencyLookup.Add(entry.Value, new HashSet<char> { entry.Key });
-                }
-                else
-                {
-                    frequencyLookup[entry.Value].Add(entry.Key);
-                }
-            }
-
-            return frequencyLookup;
+            return frequencies.Values;
         }
     }
 }
