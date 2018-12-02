@@ -45,13 +45,13 @@ namespace _2018
                     }
                 }
 
-                IDay dayAnswer;
+                Day dayAnswer;
 
                 try
                 {
                     var dayType = Type.GetType("_2018.Days.Day" + dayToRun);
 
-                    dayAnswer = (IDay) Activator.CreateInstance(dayType);
+                    dayAnswer = (Day) Activator.CreateInstance(dayType);
                 }
                 catch (Exception)
                 {

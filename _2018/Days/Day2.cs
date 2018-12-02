@@ -6,9 +6,9 @@ using _2018.Utils;
 
 namespace _2018.Days
 {
-    public class Day2 : IDay
+    public class Day2 : Day
     {
-        public void Run()
+        protected override void DoSolution()
         {
             var ids = QuestionLoader.Load(2).Split(Environment.NewLine).ToList();
 

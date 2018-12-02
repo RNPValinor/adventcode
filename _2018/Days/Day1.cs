@@ -5,9 +5,9 @@ using _2018.Utils;
 
 namespace _2018.Days
 {
-    public class Day1 : IDay
+    public class Day1 : Day
     {
-        public void Run()
+        protected override void DoSolution()
         {
             var steps = QuestionLoader.Load(1).Split(Environment.NewLine).Select(int.Parse).ToList();
             
