@@ -7,6 +7,7 @@ namespace _2018.Days
     public class Day5 : Day
     {
         private readonly string _input;
+        private const int caseDifference = 'A' - 'a';
 
         public Day5()
         {
@@ -25,7 +26,6 @@ namespace _2018.Days
         {
             var newPolymer = new StringBuilder();
             char? prevChar = null;
-            var caseDifference = Math.Abs('A' - 'a');
 
             foreach (var unit in polymer)
             {
@@ -66,7 +66,6 @@ namespace _2018.Days
         protected override void DoPart2()
         {
             var minReactantLength = int.MaxValue;
-            var caseDifference = 'A' - 'a';
             
             for (var unit = 'a'; unit <= 'z'; unit++)
             {
