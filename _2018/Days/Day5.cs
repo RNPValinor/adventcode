@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using _2018.Utils;
 
 namespace _2018.Days
@@ -22,7 +23,7 @@ namespace _2018.Days
 
         private static string React(string polymer)
         {
-            var newPolymer = "";
+            var newPolymer = new StringBuilder();
             char? prevChar = null;
             var caseDifference = Math.Abs('A' - 'a');
 
@@ -33,7 +34,7 @@ namespace _2018.Days
                     if (newPolymer.Length > 0)
                     {
                         prevChar = newPolymer[newPolymer.Length - 1];
-                        newPolymer = newPolymer.Remove(newPolymer.Length - 1);
+                        newPolymer.Remove(newPolymer.Length - 1, 1);
                     }
                     else
                     {
@@ -49,36 +50,37 @@ namespace _2018.Days
                 }
                 else
                 {
-                    newPolymer += prevChar;
+                    newPolymer.Append(prevChar);
                     prevChar = unit;
                 }
             }
 
             if (prevChar.HasValue)
             {
-                newPolymer += prevChar;
+                newPolymer.Append(prevChar);
             }
 
-            return newPolymer;
+            return newPolymer.ToString();
         }
 
         protected override void DoPart2()
         {
             var minReactantLength = int.MaxValue;
+            var caseDifference = 'A' - 'a';
             
             for (var unit = 'a'; unit <= 'z'; unit++)
             {
-                var polymer = "";
+                var polymer = new StringBuilder();
 
                 foreach (var t in this._input)
                 {
-                    if (char.ToLower(t) != unit)
+                    if (t != unit && t != unit + caseDifference)
                     {
-                        polymer += t;
+                        polymer.Append(t);
                     }
                 }
 
-                var newPolymer = React(polymer);
+                var newPolymer = React(polymer.ToString());
 
                 if (newPolymer.Length < minReactantLength)
                 {
