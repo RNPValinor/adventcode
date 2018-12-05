@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using _2018.Utils;
 
 namespace _2018.Days
@@ -23,41 +22,35 @@ namespace _2018.Days
 
         private static string React(string polymer)
         {
-            string oldPolymer;
-            var newPolymer = polymer;
-
-            do
-            {
-                oldPolymer = newPolymer;
-                newPolymer = RemoveReactants(oldPolymer);
-            } while (oldPolymer.Length != newPolymer.Length);
-
-            return newPolymer;
-        }
-
-        private static string RemoveReactants(string polymer)
-        {
             var newPolymer = "";
             char? prevChar = null;
+            var caseDifference = Math.Abs('A' - 'a');
 
             foreach (var unit in polymer)
             {
                 if (!prevChar.HasValue)
                 {
-                    prevChar = unit;
-                }
-                else
-                {
-                    if (char.ToLower(unit) == char.ToLower(prevChar.Value) && unit != prevChar.Value)
+                    if (newPolymer.Length > 0)
                     {
-                        // Same letter, different casing - react.
-                        prevChar = null;
+                        prevChar = newPolymer[newPolymer.Length - 1];
+                        newPolymer = newPolymer.Remove(newPolymer.Length - 1);
                     }
                     else
                     {
-                        newPolymer += prevChar;
                         prevChar = unit;
+                        continue;
                     }
+                }
+                
+                if (Math.Abs(unit - prevChar.Value) == caseDifference)
+                {
+                    // Same letter, different casing - react.
+                    prevChar = null;
+                }
+                else
+                {
+                    newPolymer += prevChar;
+                    prevChar = unit;
                 }
             }
 
