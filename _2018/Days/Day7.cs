@@ -99,17 +99,14 @@ namespace _2018.Days
 
                 foreach (var entry in sourceNodes)
                 {
-                    if (workingNodes.Count == 5)
-                    {
-                        // TODO: Something else
-                        break;
-                    }
-                    
                     var node = entry.Value;
 
-                    node.FinishTime = time + 60 + (node.Id + 1 - 'A');
+                    if (!workingNodes.Contains(node))
+                    {
+                        node.FinishTime = time + 60 + (node.Id + 1 - 'A');
                     
-                    workingNodes.Add(node);
+                        workingNodes.Add(node);
+                    }
                 }
                 
                 workingNodes.Sort(new NodeSorter());
@@ -120,27 +117,11 @@ namespace _2018.Days
                 time = firstNode.FinishTime;
                 workingNodes.RemoveAt(0);
                 this.RemoveNode(nodes, firstNode.Id);
-
-                // While there are more nodes finishing at this time, remove them
-                while (workingNodes.Any())
-                {
-                    var nextNode = workingNodes.First();
-
-                    if (nextNode.FinishTime == time)
-                    {
-                        workingNodes.RemoveAt(0);
-                        this.RemoveNode(nodes, firstNode.Id);    
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
             }
 
             var colour = ConsoleColor.Cyan;
 
-            if (time >= 1826)
+            if (time != 1133)
             {
                 colour = ConsoleColor.Red;
             }
