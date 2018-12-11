@@ -8,7 +8,8 @@ namespace _2018.Days
     {
         private const int SerialNumber = 2187;
         private readonly IDictionary<string, int> _powerCache = new Dictionary<string, int>();
-        private readonly IDictionary<int, Dictionary<string, int>> _squareCache = new Dictionary<int, Dictionary<string, int>>();
+        private readonly IDictionary<int, Dictionary<int, Dictionary<int, int>>> _squareCache = new Dictionary<int, Dictionary<int, Dictionary<int, int>>>();
+        private int NumCacheHits = 0;
 
         private int GetPower(int x, int y)
         {
@@ -38,17 +39,13 @@ namespace _2018.Days
 
         private int GetSquarePower(int x, int y, int width)
         {
-            var diff = x - y;
-            var power = 0;
-            var subSquare = $"{x + 1},{y + 1},{width - 1}";
+            int power;
 
-            if (this._squareCache.ContainsKey(diff))
+            if (width > 1)
             {
-                if (width > 1)
-                {
-                    // Only load sub-square if there is one
-                    power = this._squareCache[diff][subSquare];                    
-                }
+                this.NumCacheHits++;
+                
+                power = this._squareCache[x + 1][y + 1][width - 1];
 
                 for (var i = 0; i < width; i++)
                 {
@@ -62,18 +59,19 @@ namespace _2018.Days
             }
             else
             {
-                for (var i = 0; i < width; i++)
-                {
-                    for (var j = 0; j < width; j++)
-                    {
-                        power += this.GetPower(x + i, y + j);
-                    }
-                }
+                power = this.GetPower(x, y);
 
-                this._squareCache.Add(diff, new Dictionary<string, int>());
+                if (!this._squareCache.ContainsKey(x))
+                {
+                    this._squareCache.Add(x, new Dictionary<int, Dictionary<int, int>> { { y, new Dictionary<int, int>() } });
+                }
+                else if (!this._squareCache[x].ContainsKey(y))
+                {
+                    this._squareCache[x].Add(y, new Dictionary<int, int>());
+                }
             }
 
-            this._squareCache[diff].Add($"{x},{y},{width}", power);
+            this._squareCache[x][y].Add(width, power);
 
             return power;
         }
@@ -119,11 +117,11 @@ namespace _2018.Days
             var maxY = 0;
             var maxSize = 0;
 
-            for (var y = 300; y > 0; y--)
+            for (var width = 1; width <= 300; width++)
             {
-                for (var x = 300; x > 0; x--)
+                for (var x = 1; x + width - 1 <= 300; x++)
                 {
-                    for (var width = 1; (width + x <= 301 && width + y <= 301); width++)
+                    for (var y = 1; y + width - 1 <= 300; y++)
                     {
                         var squarePower = this.GetSquarePower(x, y, width);
 
@@ -136,6 +134,10 @@ namespace _2018.Days
                         }
                     }
                 }
+                
+                ConsoleUtils.WriteColouredLine($"Done width = {width}, num cache hits = {this.NumCacheHits}", ConsoleColor.Magenta);
+
+                this.NumCacheHits = 0;
             }
             
             ConsoleUtils.WriteColouredLine($"Max flexible square power at ({maxX}, {maxY}), width {maxSize}", ConsoleColor.Cyan);
