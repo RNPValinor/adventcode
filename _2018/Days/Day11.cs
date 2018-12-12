@@ -7,17 +7,18 @@ namespace _2018.Days
     public class Day11 : Day
     {
         private const int SerialNumber = 2187;
-        private readonly IDictionary<string, int> _powerCache = new Dictionary<string, int>();
+        private readonly IDictionary<int, Dictionary<int, int>> _powerCache = new Dictionary<int, Dictionary<int, int>>();
         private readonly IDictionary<int, Dictionary<int, Dictionary<int, int>>> _squareCache = new Dictionary<int, Dictionary<int, Dictionary<int, int>>>();
-        private int NumCacheHits = 0;
+        private int _numCacheHits;
 
         private int GetPower(int x, int y)
         {
-            var coord = $"{x},{y}";
-            
-            if (this._powerCache.ContainsKey(coord))
+            if (this._powerCache.ContainsKey(x))
             {
-                return this._powerCache[coord];
+                if (this._powerCache[x].ContainsKey(y))
+                {
+                    return this._powerCache[x][y];
+                }
             }
             
             var rackId = x + 10;
@@ -31,8 +32,13 @@ namespace _2018.Days
             power = power < 100 ? 0 : Math.Abs(power / 100 % 10);
 
             power -= 5;
+
+            if (!this._powerCache.ContainsKey(x))
+            {
+                this._powerCache.Add(x, new Dictionary<int, int>());
+            }
             
-            this._powerCache.Add(coord, power);
+            this._powerCache[x].Add(y, power);
 
             return power;
         }
@@ -43,7 +49,7 @@ namespace _2018.Days
 
             if (width > 1)
             {
-                this.NumCacheHits++;
+                this._numCacheHits++;
                 
                 power = this._squareCache[x + 1][y + 1][width - 1];
 
@@ -135,9 +141,9 @@ namespace _2018.Days
                     }
                 }
                 
-                ConsoleUtils.WriteColouredLine($"Done width = {width}, num cache hits = {this.NumCacheHits}", ConsoleColor.Magenta);
+                ConsoleUtils.WriteColouredLine($"Done width = {width}, num cache hits = {this._numCacheHits}", ConsoleColor.Magenta);
 
-                this.NumCacheHits = 0;
+                this._numCacheHits = 0;
             }
             
             ConsoleUtils.WriteColouredLine($"Max flexible square power at ({maxX}, {maxY}), width {maxSize}", ConsoleColor.Cyan);
