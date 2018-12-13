@@ -85,9 +85,20 @@ namespace _2018.Days
         {
             var currentGen = Input.Select(plant => plant == '#').ToList();
             var nextGen = new List<bool>();
+
+            int potSum;
+            int potDiff;
+
+            var newPotSum = currentGen.Select((plant, index) => plant ? index : 0).Sum();;
+            var newPotDiff = 0;
             
-            for (var i = 0; i < 50; i++)
+            var i = 0;
+
+            do
             {
+                potSum = newPotSum;
+                potDiff = newPotDiff;
+                
                 for (var j = -2; j < currentGen.Count + 2; j++)
                 {
                     var pattern = new List<bool>();
@@ -109,20 +120,33 @@ namespace _2018.Days
 
                 currentGen = nextGen;
                 nextGen = new List<bool>();
-                
-                var potSum = currentGen.Select((plant, index) => plant ? (index - (2 * i)) : 0).Sum();
-                
-                ConsoleUtils.WriteColouredLine($"Done {i} iterations, potSum is {potSum}", ConsoleColor.DarkGreen);
+
+                newPotSum = currentGen.Select((plant, index) => plant ? (index - (2 * i)) : 0).Sum();
+                newPotDiff = newPotSum - potSum;
+                i++;
+            } while (newPotDiff != potDiff);
+
+            ConsoleUtils.WriteColouredLine($"Got stable increase of (+{potDiff}) after {i} generations, potSum is {potSum}", ConsoleColor.Green);
+
+            var endPotSum = newPotSum + (50000000000 - i) * potDiff;
+            
+            var colour = ConsoleColor.Cyan;
+
+            if (endPotSum >= 4050000001041 || endPotSum <= 2025000000520)
+            {
+                colour = ConsoleColor.Red;
             }
+            
+            ConsoleUtils.WriteColouredLine($"End pot sum is {endPotSum}", colour);
 //
-//            long thousandSum = 82041;
-//            long thousandIncrement = 81000;
+//            const long thousandSum = 82041;
+//            const long thousandIncrement = 81000;
 //
-//            var potSum = thousandSum + (thousandIncrement * 49999999);
+//            const long potSum = thousandSum + (thousandIncrement * (50000000 - 1));
 //
 //            var colour = ConsoleColor.Cyan;
 //
-//            if (potSum >= 4050000001041)
+//            if (potSum >= 4050000001041 || potSum <= 2025000000520)
 //            {
 //                colour = ConsoleColor.Red;
 //            }
