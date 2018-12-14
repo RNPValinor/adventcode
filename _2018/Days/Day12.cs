@@ -88,7 +88,7 @@ namespace _2018.Days
 
             int potDiff;
 
-            var newPotSum = currentGen.Select((plant, index) => plant ? index : 0).Sum();;
+            var newPotSum = currentGen.Select((plant, index) => plant ? index : 0).Sum();
             var newPotDiff = 0;
             
             var i = 0;
