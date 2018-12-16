@@ -9,7 +9,7 @@ namespace _2018.Days
     {
         private const string Input = ".#..##..#.....######.....#....####.##.#.#...#...##.#...###..####.##.##.####..######......#..##.##.##";
 
-        private readonly BST<bool> _transforms = new BST<bool>();
+        private readonly Bst<bool> _transforms = new Bst<bool>();
 
         public Day12()
         {

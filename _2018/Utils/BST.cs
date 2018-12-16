@@ -1,30 +1,30 @@
 namespace _2018.Utils
 {
-    public class BST<T>
+    public class Bst<T>
     {
-        public Node<T> Root;
+        public readonly Node Root;
         
-        public BST()
+        public Bst()
         {
-            this.Root = new Node<T>();
+            this.Root = new Node();
         }
         
-        public class Node<T>
+        public class Node
         {
             public T Value { get; set; }
             
-            private Node<T> Left { get; set; }
+            private Node Left { get; set; }
             
-            private Node<T> Right { get; set; }
+            private Node Right { get; set; }
 
-            public Node<T> GetLeft()
+            public Node GetLeft()
             {
-                return this.Left ?? (this.Left = new Node<T>());
+                return this.Left ?? (this.Left = new Node());
             }
 
-            public Node<T> GetRight()
+            public Node GetRight()
             {
-                return this.Right ?? (this.Right = new Node<T>());
+                return this.Right ?? (this.Right = new Node());
             }
         }
     }
