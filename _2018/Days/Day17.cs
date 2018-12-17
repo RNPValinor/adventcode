@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using AnimatedGif;
 using _2018.Utils;
 
 namespace _2018.Days
@@ -11,6 +12,8 @@ namespace _2018.Days
         private readonly HashSet<Point> _settledWater = new HashSet<Point>();
         private int _minY = int.MaxValue;
         private int _maxY = int.MinValue;
+        private int _minX = int.MaxValue;
+        private int _maxX = int.MinValue;
         
         private void LoadClay()
         {
@@ -61,6 +64,16 @@ namespace _2018.Days
             {
                 this._maxY = endY;
             }
+
+            if (startX < this._minX)
+            {
+                this._minX = startX;
+            }
+
+            if (endX> this._maxX)
+            {
+                this._maxX = endX;
+            }
         }
 
         /// <summary>
@@ -84,12 +97,6 @@ namespace _2018.Days
                 }
                 
                 visitedPoints.Add(currentPoint);
-                
-                // {X=577,Y=547}
-                if (currentPoint.X == 577 && currentPoint.Y == 547)
-                {
-                    ConsoleUtils.WriteColouredLine("Saw (577, 547)", ConsoleColor.DarkGreen);                    
-                }
                 
                 if (this.FullBelow(currentPoint, this._settledWater))
                 {
@@ -175,23 +182,69 @@ namespace _2018.Days
             return (false, prevPoint);
         }
 
+        private Image GenerateImage(HashSet<Point> flowingWater)
+        {
+            var image = new Bitmap(this._maxX - this._minX + 2, this._maxY + 1);
+
+            for (var x = 0; x < image.Width; x++)
+            {
+                for (var y = 0; y <= this._maxY; y++)
+                {
+                    var colour = Color.SandyBrown;
+                    var p = new Point(x + this._minX, y);
+
+                    if (this._clay.Contains(p))
+                    {
+                        colour = Color.SaddleBrown;
+                    }
+                    else if (this._settledWater.Contains(p))
+                    {
+                        colour = Color.Blue;
+                    }
+                    else if (flowingWater.Contains(p))
+                    {
+                        colour = Color.Aqua;
+                    }
+                    
+                    image.SetPixel(x, y, colour);
+                }
+            }
+
+            return image;
+        }
+
         protected override void DoPart1()
         {
             this.LoadClay();
 
             int oldSettledSize;
-            HashSet<Point> flowingWater;
+            var flowingWater = new HashSet<Point>();
             var numIterations = 0;
+            
+            var images = new List<Image>
+            {
+                this.GenerateImage(flowingWater)
+            };
 
             do
             {
                 oldSettledSize = this._settledWater.Count;
+                
                 flowingWater = this.SettleWater(500, 0, new HashSet<Point>());
+                images.Add(this.GenerateImage(flowingWater));
+                
                 numIterations++;
-                ConsoleUtils.WriteColouredLine($"Got {this._settledWater.Count} settled water and {flowingWater.Count} flowing water, after {numIterations} loops", ConsoleColor.DarkBlue);
             } while (this._settledWater.Count > oldSettledSize);
-            
+
             ConsoleUtils.WriteColouredLine($"Got {this._settledWater.Count} settled water and {flowingWater.Count} flowing water, after {numIterations} loops", ConsoleColor.Cyan);
+            
+            using (var gif = AnimatedGif.AnimatedGif.Create("water.gif", 33))
+            {
+                foreach (var image in images)
+                {
+                    gif.AddFrame(image, delay: -1, quality: GifQuality.Bit8);
+                }
+            }
         }
 
         protected override void DoPart2()
