@@ -8,6 +8,7 @@ namespace _2018.Days
     public class Day17 : Day
     {
         private readonly HashSet<Point> _clay = new HashSet<Point>();
+        private readonly HashSet<Point> _settledWater = new HashSet<Point>();
         private int _minY = int.MaxValue;
         private int _maxY = int.MinValue;
         
@@ -67,47 +68,135 @@ namespace _2018.Days
         /// </summary>
         /// <param name="x">X-coordinate of the start of the flow</param>
         /// <param name="y">Y-coordinate of the start of the flow</param>
-        /// <param name="settledWater">Set of all currently settled water points</param>
+        /// <param name="visitedPoints">Set of already considered points for this iteration</param>
         /// <returns></returns>
-        private HashSet<Point> SettleWater(int x, int y, HashSet<Point> settledWater)
+        private HashSet<Point> SettleWater(int x, int y, ISet<Point> visitedPoints)
         {
             var movingWater = new HashSet<Point>();
 
-            bool FullBelow(Point p) => this._clay.Contains(p) || settledWater.Contains(p);
-
             while (y <= this._maxY)
             {
-                if (FullBelow(new Point(x, y + 1)))
+                var currentPoint = new Point(x, y);
+
+                if (visitedPoints.Contains(currentPoint))
+                {
+                    return movingWater;
+                }
+                
+                visitedPoints.Add(currentPoint);
+                
+                // {X=577,Y=547}
+                if (currentPoint.X == 577 && currentPoint.Y == 547)
+                {
+                    ConsoleUtils.WriteColouredLine("Saw (577, 547)", ConsoleColor.DarkGreen);                    
+                }
+                
+                if (this.FullBelow(currentPoint, this._settledWater))
                 {
                     // Clay/settled water below, maybe settle
+                    var (fallLeft, leftPoint) = this.GetFallPoint(currentPoint, -1);
+                    var (fallRight, rightPoint) = this.GetFallPoint(currentPoint, 1);
+
+                    if (!fallLeft && !fallRight)
+                    {
+                        // Can fill at this level - do so and return
+                        for (var i = leftPoint.X; i <= rightPoint.X; i++)
+                        {
+                            this._settledWater.Add(new Point(i, currentPoint.Y));
+                        }
+                    }
+                    else
+                    {
+                        for (var newX = leftPoint.X + (fallLeft ? 1 : 0); newX <= rightPoint.X - (fallRight ? 1 : 0); newX++)
+                        {
+                            movingWater.Add(new Point(newX, currentPoint.Y));
+                        }
+                        
+                        if (fallLeft)
+                        {
+                            var moving = this.SettleWater(leftPoint.X, leftPoint.Y, visitedPoints);
+
+                            foreach (var movingPoint in moving)
+                            {
+                                movingWater.Add(movingPoint);
+                            }
+                        }
+
+                        if (fallRight)
+                        {
+                            var moving = this.SettleWater(rightPoint.X, rightPoint.Y, visitedPoints);
+
+                            foreach (var movingPoint in moving)
+                            {
+                                movingWater.Add(movingPoint);
+                            }
+                        }
+                    }
                     
+                    return movingWater;
+                }
+                else
+                {
+                    if (y >= this._minY)
+                    {
+                        movingWater.Add(new Point(x, y));
+                    }
+                    
+                    y++;
                 }
             }
 
             return movingWater;
         }
-        
+
+        private bool FullBelow(Point p, ICollection<Point> settledWater)
+        {
+            var belowPoint = new Point(p.X, p.Y + 1);
+            
+            return this._clay.Contains(belowPoint) || settledWater.Contains(belowPoint);
+        }
+
+        private (bool hasFall, Point fallPoint) GetFallPoint(Point start, int xOffset)
+        {
+            var prevPoint = start;
+            var currentPoint = start;
+
+            while (!this._clay.Contains(currentPoint))
+            {
+                if (!this.FullBelow(currentPoint, this._settledWater))
+                {
+                    return (true, currentPoint);
+                }
+
+                prevPoint = currentPoint;
+                currentPoint = new Point(currentPoint.X + xOffset, currentPoint.Y);
+            }
+
+            return (false, prevPoint);
+        }
+
         protected override void DoPart1()
         {
             this.LoadClay();
 
-            var wateryBits = new HashSet<Point> {new Point(500, 0)};
-
-            var numWaterSquares = 0;
-
-            var gotFlow = false;
+            int oldSettledSize;
+            HashSet<Point> flowingWater;
+            var numIterations = 0;
 
             do
             {
-                
-            } while (gotFlow);
+                oldSettledSize = this._settledWater.Count;
+                flowingWater = this.SettleWater(500, 0, new HashSet<Point>());
+                numIterations++;
+                ConsoleUtils.WriteColouredLine($"Got {this._settledWater.Count} settled water and {flowingWater.Count} flowing water, after {numIterations} loops", ConsoleColor.DarkBlue);
+            } while (this._settledWater.Count > oldSettledSize);
             
-            ConsoleUtils.WriteColouredLine($"Got {numWaterSquares} watery bits within bounds", ConsoleColor.Cyan);
+            ConsoleUtils.WriteColouredLine($"Got {this._settledWater.Count} settled water and {flowingWater.Count} flowing water, after {numIterations} loops", ConsoleColor.Cyan);
         }
 
         protected override void DoPart2()
         {
-            
+            ConsoleUtils.WriteColouredLine($"Got {this._settledWater.Count} settled water", ConsoleColor.Cyan);
         }
     }
 }
