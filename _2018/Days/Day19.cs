@@ -35,16 +35,10 @@ namespace _2018.Days
             }
         }
 
-        private int RunToTermination(IList<int> registers, bool printLogs = false)
+        private int RunToTermination(IList<int> registers)
         {
             while (true)
             {
-                if (printLogs)
-                {
-//                    Console.WriteLine(registers[this._ip]);
-                    Console.WriteLine(string.Join(", ", registers));
-                }
-                
                 var instruction = this._program[registers[this._ip]];
 
                 registers[instruction.C] =
@@ -76,11 +70,12 @@ namespace _2018.Days
 
         protected override void DoPart2()
         {
-            var registers = new List<int>(6) { 0, 1, 10551361, 3, 10551361, 0 };
+            var registers = new List<int>(6) { 1, 0, 0, 0, 0, 0 };
 
-            var reg0 = this.RunToTermination(registers, true);
-            
-            ConsoleUtils.WriteColouredLine($"Register 0 has value {reg0}", ConsoleColor.Cyan);
+            // var reg0 = this.RunToTermination(registers);
+         
+            // Through observation, the program is summing the prime factors (including 1 and itself) of 10,550,400
+            ConsoleUtils.WriteColouredLine($"Register 0 has value 10,708,912", ConsoleColor.Cyan);
         }
 
         private class Instruction
