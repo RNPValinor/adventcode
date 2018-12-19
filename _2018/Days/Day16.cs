@@ -8,24 +8,24 @@ namespace _2018.Days
     public class Day16 : Day
     {
         private readonly IDictionary<byte, HashSet<string>> _possibleMatches = new Dictionary<byte, HashSet<string>>();
-        private readonly IDictionary<string, Func<IList<ushort>, byte, byte, ushort>> _instructions = new Dictionary<string, Func<IList<ushort>, byte, byte, ushort>>
+        public static readonly IDictionary<string, Func<IList<int>, byte, byte, int>> Instructions = new Dictionary<string, Func<IList<int>, byte, byte, int>>
         {
-            { "addi", (registers, a, b) => (ushort) (registers[a] + b) },
-            { "addr", (registers, a, b) => (ushort) (registers[a] + registers[b]) },
-            { "muli", (registers, a, b) => (ushort) (registers[a] * b) },
-            { "mulr", (registers, a, b) => (ushort) (registers[a] * registers[b]) },
-            { "bani", (registers, a, b) => (ushort) (registers[a] & b) },
-            { "banr", (registers, a, b) => (ushort) (registers[a] & registers[b]) },
-            { "bori", (registers, a, b) => (ushort) (registers[a] | b) },
-            { "borr", (registers, a, b) => (ushort) (registers[a] | registers[b]) },
-            { "seti", (registers, a, b) => (ushort) (a) },
+            { "addi", (registers, a, b) => (registers[a] + b) },
+            { "addr", (registers, a, b) => (registers[a] + registers[b]) },
+            { "muli", (registers, a, b) => (registers[a] * b) },
+            { "mulr", (registers, a, b) => (registers[a] * registers[b]) },
+            { "bani", (registers, a, b) => (registers[a] & b) },
+            { "banr", (registers, a, b) => (registers[a] & registers[b]) },
+            { "bori", (registers, a, b) => (registers[a] | b) },
+            { "borr", (registers, a, b) => (registers[a] | registers[b]) },
+            { "seti", (registers, a, b) => (a) },
             { "setr", (registers, a, b) => registers[a] },
-            { "gtir", (registers, a, b) => (ushort) (a > registers[b] ? 1 : 0) },
-            { "gtri", (registers, a, b) => (ushort) (registers[a] > b ? 1 : 0) },
-            { "gtrr", (registers, a, b) => (ushort) (registers[a] > registers[b] ? 1 : 0) },
-            { "eqir", (registers, a, b) => (ushort) (a == registers[b] ? 1 : 0) },
-            { "eqri", (registers, a, b) => (ushort) (registers[a] == b ? 1 : 0) },
-            { "eqrr", (registers, a, b) => (ushort) (registers[a] == registers[b] ? 1 : 0) }
+            { "gtir", (registers, a, b) => (a > registers[b] ? 1 : 0) },
+            { "gtri", (registers, a, b) => (registers[a] > b ? 1 : 0) },
+            { "gtrr", (registers, a, b) => (registers[a] > registers[b] ? 1 : 0) },
+            { "eqir", (registers, a, b) => (a == registers[b] ? 1 : 0) },
+            { "eqri", (registers, a, b) => (registers[a] == b ? 1 : 0) },
+            { "eqrr", (registers, a, b) => (registers[a] == registers[b] ? 1 : 0) }
         };
         
         protected override void DoPart1()
@@ -37,8 +37,8 @@ namespace _2018.Days
             {
                 var data = example.Split(Environment.NewLine);
 
-                var initialRegisters = data[0].Substring(9, 10).Split(',').Select(ushort.Parse).ToList();
-                var targetRegisters = data[2].Substring(9, 10).Split(',').Select(ushort.Parse).ToList();
+                var initialRegisters = data[0].Substring(9, 10).Split(',').Select(int.Parse).ToList();
+                var targetRegisters = data[2].Substring(9, 10).Split(',').Select(int.Parse).ToList();
 
                 var instData = data[1].Split(' ');
                 var opCode = byte.Parse(instData[0]);
@@ -49,9 +49,9 @@ namespace _2018.Days
                 var numMatches = 0;
                 var currentMatches = new HashSet<string>();
 
-                foreach (var instructionEntry in this._instructions)
+                foreach (var instructionEntry in Instructions)
                 {
-                    var registers = new List<ushort>(initialRegisters);
+                    var registers = new List<int>(initialRegisters);
 
                     registers[c] = instructionEntry.Value(registers, a, b);
 
@@ -100,7 +100,7 @@ namespace _2018.Days
             }
 
             var program = QuestionLoader.Load(16, true).Split(Environment.NewLine);
-            var registers = new List<ushort> {0, 0, 0, 0};
+            var registers = new List<int> {0, 0, 0, 0};
 
             foreach (var line in program)
             {
@@ -111,7 +111,7 @@ namespace _2018.Days
                 var b = instructionData[2];
                 var c = instructionData[3];
 
-                var instruction = this._instructions[opcodeMap[opInt]];
+                var instruction = Instructions[opcodeMap[opInt]];
 
                 registers[c] = instruction(registers, a, b);
             }
