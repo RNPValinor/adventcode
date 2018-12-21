@@ -8,7 +8,7 @@ namespace _2018.Days
     public class Day16 : Day
     {
         private readonly IDictionary<byte, HashSet<string>> _possibleMatches = new Dictionary<byte, HashSet<string>>();
-        public static readonly IDictionary<string, Func<IList<int>, byte, byte, int>> Instructions = new Dictionary<string, Func<IList<int>, byte, byte, int>>
+        public static readonly IDictionary<string, Func<IList<int>, int, int, int>> Instructions = new Dictionary<string, Func<IList<int>, int, int, int>>
         {
             { "addi", (registers, a, b) => (registers[a] + b) },
             { "addr", (registers, a, b) => (registers[a] + registers[b]) },
