@@ -11,7 +11,7 @@ namespace _2018.Days
     {
         private const int Depth = 8103;
         private readonly Point _targetPosition = new Point(9, 758);
-        private readonly Point _furthestPoint = new Point(100, 850);
+        private readonly Point _furthestPoint = new Point(47, 758);
         private readonly IDictionary<Point, int> _erosionLevels = new Dictionary<Point, int>();
         private readonly IDictionary<Point, TerrainType> _terrain = new Dictionary<Point, TerrainType>();
 
@@ -252,7 +252,7 @@ namespace _2018.Days
 
             var colour = ConsoleColor.Cyan;
 
-            if (shortestPath >= 1045)
+            if (shortestPath != 1029)
             {
                 colour = ConsoleColor.Red;
             }
