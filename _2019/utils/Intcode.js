@@ -1,6 +1,8 @@
-export default class Intcode {
+const _ = require("lodash");
+
+class Intcode {
   constructor(data) {
-    this.originalData = data.toString().split(",");
+    this.originalData = _.map(data.toString().split(","), num => parseInt(num));
   }
 
   runProgram(input1, input2) {
@@ -41,6 +43,8 @@ export default class Intcode {
     const resPtr = this.currentData[this.instPtr + 3];
 
     this.currentData[resPtr] = this.currentData[aPtr] + this.currentData[bPtr];
+
+    this.instPtr += 4;
   }
 
   _doMult() {
@@ -49,5 +53,9 @@ export default class Intcode {
     const resPtr = this.currentData[this.instPtr + 3];
 
     this.currentData[resPtr] = this.currentData[aPtr] * this.currentData[bPtr];
+
+    this.instPtr += 4;
   }
 }
+
+module.exports = Intcode;
