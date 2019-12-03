@@ -1,6 +1,11 @@
 class BaseDay {
-  runPart1() {}
-  runPart2() {}
+  runPart1() {
+    return 'Unimplemented'
+  }
+  
+  runPart2() {
+    return 'Unimplemented'
+  }
 }
 
 module.exports = BaseDay;
