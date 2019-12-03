@@ -2,7 +2,7 @@ const _ = require("lodash");
 
 class Intcode {
   constructor(data) {
-    this.originalData = _.map(data.toString().split(","), num => parseInt(num));
+    this.originalData = _.map(data.split(","), num => parseInt(num));
   }
 
   runProgram(input1, input2) {
