@@ -23,7 +23,10 @@ class Day2 extends BaseDay {
   runPart1() {
     const intcode = this._getIntcode();
 
-    intcode.runProgram(this.noun, this.verb);
+    intcode.runProgram({
+      inputs: [this.noun, this.verb],
+      legacyInputMode: true
+    });
 
     return intcode.currentData[0];
   }
@@ -33,7 +36,7 @@ class Day2 extends BaseDay {
 
     for (let noun = 0; noun <= 99; noun++) {
       for (let verb = 0; verb <= 99; verb++) {
-        intcode.runProgram(noun, verb);
+        intcode.runProgram({ inputs: [noun, verb], legacyInputMode: true });
 
         if (intcode.currentData[0] === this.targetOutput) {
           return `noun: ${noun}, verb: ${verb}`;
