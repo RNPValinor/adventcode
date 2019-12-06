@@ -1,10 +1,14 @@
 class BaseDay {
-  runPart1() {
-    return 'Unimplemented'
+  constructor(verbose = false) {
+    this.verbose = verbose;
   }
-  
+
+  runPart1() {
+    return "Unimplemented";
+  }
+
   runPart2() {
-    return 'Unimplemented'
+    return "Unimplemented";
   }
 }
 

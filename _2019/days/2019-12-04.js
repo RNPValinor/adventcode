@@ -3,8 +3,8 @@ const getDigits = require("../utils/getDigits");
 const _ = require("lodash");
 
 class Day4 extends BaseDay {
-  constructor() {
-    super();
+  constructor(verbose) {
+    super(verbose);
     this.start = 172851;
     this.end = 675869;
   }

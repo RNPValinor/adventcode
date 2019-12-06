@@ -1,11 +1,10 @@
 const _ = require("lodash");
 const getDigits = require("./getDigits");
 
-const verbose = false;
-
 class Intcode {
-  constructor(data) {
+  constructor(data, verbose = false) {
     this.originalData = _.map(data.split(","), num => parseInt(num));
+    this.verbose = verbose;
   }
 
   runProgram({ inputs, legacyInputMode = false }) {
@@ -95,7 +94,7 @@ class Intcode {
     const [a, b] = this._readParameters(2, modes);
     const resAddr = this.currentData[this.instPtr + 3];
 
-    if (verbose) {
+    if (this.verbose) {
       console.log(`Doing add, a: ${a}, b: ${b}, resAddr: ${resAddr}`);
     }
 
@@ -108,7 +107,7 @@ class Intcode {
     const [a, b] = this._readParameters(2, modes);
     const resAddr = this.currentData[this.instPtr + 3];
 
-    if (verbose) {
+    if (this.verbose) {
       console.log(`Doing mult, a: ${a}, b: ${b}, resAddr: ${resAddr}`);
     }
 
@@ -121,7 +120,7 @@ class Intcode {
     const ptr = this.currentData[this.instPtr + 1];
     const input = this.inputs.pop();
 
-    if (verbose) {
+    if (this.verbose) {
       console.log(`Reading input: ${input}, storing in: ${ptr}`);
     }
 
@@ -134,7 +133,7 @@ class Intcode {
     const ptr = this.currentData[this.instPtr + 1];
     const output = this.currentData[ptr];
 
-    if (verbose) {
+    if (this.verbose) {
       console.log(`Writing output: ${output}, read from: ${ptr}`);
     }
 
@@ -146,7 +145,7 @@ class Intcode {
   _jumpIfTrue(modes) {
     const [jmp, newPtr] = this._readParameters(2, modes);
 
-    if (verbose) {
+    if (this.verbose) {
       console.log(`Jump if true: ${jmp}, jump to ${newPtr}`);
     }
 
@@ -160,7 +159,7 @@ class Intcode {
   _jumpIfFalse(modes) {
     const [jmp, newPtr] = this._readParameters(2, modes);
 
-    if (verbose) {
+    if (this.verbose) {
       console.log(`Jump if false: ${jmp}, jump to ${newPtr}`);
     }
 
@@ -175,7 +174,7 @@ class Intcode {
     const [a, b] = this._readParameters(2, modes);
     const resAddr = this.currentData[this.instPtr + 3];
 
-    if (verbose) {
+    if (this.verbose) {
       console.log(`Check if ${a} < ${b}, store in ${resAddr}`);
     }
 
@@ -188,7 +187,7 @@ class Intcode {
     const [a, b] = this._readParameters(2, modes);
     const resAddr = this.currentData[this.instPtr + 3];
 
-    if (verbose) {
+    if (this.verbose) {
       console.log(`Check if ${a} === ${b}, store in ${resAddr}`);
     }
 

@@ -2,8 +2,8 @@ const fs = require("fs");
 const BaseDay = require("./BaseDay");
 
 class Day3 extends BaseDay {
-  constructor() {
-    super();
+  constructor(verbose) {
+    super(verbose);
     this.paths = [];
     this.intersections = [];
   }

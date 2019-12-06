@@ -3,8 +3,8 @@ const Intcode = require("../utils/Intcode");
 const BaseDay = require("./BaseDay");
 
 class Day2 extends BaseDay {
-  constructor() {
-    super();
+  constructor(verbose) {
+    super(verbose);
     this.noun = 12;
     this.verb = 2;
     this.targetOutput = 19690720;
@@ -14,7 +14,7 @@ class Day2 extends BaseDay {
     if (!this._intcode) {
       const data = fs.readFileSync("inputs/2.txt").toString();
 
-      this._intcode = new Intcode(data);
+      this._intcode = new Intcode(data, this.verbose);
     }
 
     return this._intcode;

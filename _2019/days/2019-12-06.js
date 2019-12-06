@@ -2,10 +2,15 @@ const BaseDay = require("./BaseDay");
 const fs = require("fs");
 
 class Day6 extends BaseDay {
+  constructor(verbose, benchmark) {
+    super(verbose);
+    this.benchmark = benchmark;
+  }
+
   _getPlanets() {
     if (!this._planets) {
       const data = fs
-        .readFileSync("inputs/6.txt")
+        .readFileSync(this.benchmark ? "inputs/6benchmark.txt" : "inputs/6.txt")
         .toString()
         .split("\n");
 
@@ -39,17 +44,21 @@ class Day6 extends BaseDay {
     return this._planets;
   }
 
-  _getNumOrbits(planet, numIndirect = 0) {
+  _getNumOrbits(planet) {
     let numOrbits = 0;
+    const queue = [{ planet, numIndirect: 0 }];
 
-    for (let i = 0, len = planet.orbiters.length; i < len; i++) {
-      const orbiter = planet.orbiters[i];
+    while (queue.length) {
+      const { planet, numIndirect } = queue.shift();
 
       // Number of orbits is the number of orbits to get to the 'parent' of this
       // orbiter (indirect), plus 1 (direct)
       numOrbits += numIndirect + 1;
 
-      numOrbits += this._getNumOrbits(orbiter, numIndirect + 1);
+      for (let i = 0, len = planet.orbiters.length; i < len; i++) {
+        const orbiter = planet.orbiters[i];
+        queue.push({ planet: orbiter, numIndirect: numIndirect + 1 });
+      }
     }
 
     return numOrbits;

@@ -7,7 +7,7 @@ class Day5 extends BaseDay {
     if (!this._intcode) {
       const data = fs.readFileSync("inputs/5.txt").toString();
 
-      this._intcode = new Intcode(data);
+      this._intcode = new Intcode(data, this.verbose);
     }
 
     return this._intcode;

@@ -24,6 +24,42 @@ function processArguments() {
             describe: "Solve part 2",
             default: true,
             type: "boolean"
+          })
+          .option("verbose", {
+            demandOption: false,
+            describe: "Turn on verbose logging",
+            default: false,
+            type: "boolean"
+          });
+      }
+    )
+    .command(
+      "benchmark",
+      "Benchmarks the current day (default) or a specified day",
+      yargs => {
+        return yargs
+          .option("date", {
+            demandOption: false,
+            describe: "Date to solve in YYYY-MM-DD format",
+            type: "string"
+          })
+          .option("part1", {
+            demandOption: false,
+            describe: "Solve part 1",
+            default: true,
+            type: "boolean"
+          })
+          .option("part2", {
+            demandOption: false,
+            describe: "Solve part 2",
+            default: true,
+            type: "boolean"
+          })
+          .option("verbose", {
+            demandOption: false,
+            describe: "Turn on verbose logging",
+            default: false,
+            type: "boolean"
           });
       }
     )
@@ -49,7 +85,9 @@ function index() {
     process.exit(1);
   }
 
-  const day = new dayClass();
+  const benchmark = argv._ == "benchmark";
+
+  const day = new dayClass(argv.verbose, benchmark);
 
   if (argv.part1) {
     console.log(`Part 1: ${day.runPart1()}`);
