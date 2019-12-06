@@ -1,5 +1,6 @@
 const BaseDay = require("./BaseDay");
 const fs = require("fs");
+const Queue = require("../utils/Queue");
 
 class Day6 extends BaseDay {
   constructor(verbose, benchmark) {
@@ -46,10 +47,12 @@ class Day6 extends BaseDay {
 
   _getNumOrbits(planet) {
     let numOrbits = 0;
-    const queue = [{ planet, numIndirect: 0 }];
 
-    while (queue.length) {
-      const { planet, numIndirect } = queue.shift();
+    const queue = new Queue();
+    queue.enqueue({ planet, numIndirect: 0 });
+
+    while (queue.hasMore()) {
+      const { planet, numIndirect } = queue.dequeue();
 
       // Number of orbits is the number of orbits to get to the 'parent' of this
       // orbiter (indirect), plus 1 (direct)
@@ -57,7 +60,7 @@ class Day6 extends BaseDay {
 
       for (let i = 0, len = planet.orbiters.length; i < len; i++) {
         const orbiter = planet.orbiters[i];
-        queue.push({ planet: orbiter, numIndirect: numIndirect + 1 });
+        queue.enqueue({ planet: orbiter, numIndirect: numIndirect + 1 });
       }
     }
 
@@ -76,15 +79,14 @@ class Day6 extends BaseDay {
     const seen = {};
     seen[source.id] = true;
 
-    const queue = [
-      {
-        planet: source.parent,
-        numTransfers: 0
-      }
-    ];
+    const queue = new Queue();
+    queue.enqueue({
+      planet: source.parent,
+      numTransfers: 0
+    });
 
-    while (queue.length) {
-      const { planet, numTransfers } = queue.shift();
+    while (queue.hasMore()) {
+      const { planet, numTransfers } = queue.dequeue();
 
       seen[planet.id] = true;
 
@@ -94,7 +96,10 @@ class Day6 extends BaseDay {
 
       // Try and transfer to the planet this planet is orbiting
       if (planet.parent && !seen[planet.parent.id]) {
-        queue.push({ planet: planet.parent, numTransfers: numTransfers + 1 });
+        queue.enqueue({
+          planet: planet.parent,
+          numTransfers: numTransfers + 1
+        });
       }
 
       // Try and transfer to one of the other planets orbiting this one
@@ -102,7 +107,7 @@ class Day6 extends BaseDay {
         const orbiter = planet.orbiters[i];
 
         if (!seen[orbiter.id]) {
-          queue.push({ planet: orbiter, numTransfers: numTransfers + 1 });
+          queue.enqueue({ planet: orbiter, numTransfers: numTransfers + 1 });
         }
       }
     }
