@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const getDigits = require("./getDigits");
 
-const verbose = true;
+const verbose = false;
 
 class Intcode {
   constructor(data) {
