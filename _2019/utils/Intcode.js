@@ -7,7 +7,7 @@ class Intcode {
     this.verbose = verbose;
   }
 
-  runProgram({ inputs, legacyInputMode = false }) {
+  runProgram({ inputs, inputChannel, outputChannel, legacyInputMode = false }) {
     this.currentData = this.originalData.slice();
 
     if (legacyInputMode) {
@@ -18,6 +18,8 @@ class Intcode {
     } else {
       this.inputs = inputs;
     }
+
+    inputChannel.on("message", m => this.inputs.unshift(m));
 
     this.outputs = [];
 
@@ -117,6 +119,8 @@ class Intcode {
   }
 
   _readInput(modes) {
+    while (this.inputs.length === 0) {}
+
     const ptr = this.currentData[this.instPtr + 1];
     const input = this.inputs.pop();
 
