@@ -25,8 +25,11 @@ class Intcode {
     this.outputs = [];
 
     this.instPtr = 0;
+    this.relativeBase = 0;
 
     this.resumeExecution();
+
+    return this.state;
   }
 
   pauseExecution() {
@@ -39,6 +42,8 @@ class Intcode {
     do {
       this._runNextInstruction();
     } while (this.state === IntcodeStates.Running);
+
+    return this.state;
   }
 
   _runNextInstruction() {
@@ -72,6 +77,9 @@ class Intcode {
       case 8:
         this._equals(modes);
         break;
+      case 9:
+        this._adjustRelativeBase(modes);
+        break;
       case 99:
         this.state = IntcodeStates.Terminated;
         break;
@@ -81,7 +89,7 @@ class Intcode {
     }
   }
 
-  _readParameters(numParams, modes) {
+  _getParamAddresses(numParams, modes) {
     const params = [];
     const modeArray = getDigits(modes).reverse();
 
@@ -95,19 +103,29 @@ class Intcode {
   _loadValue(idx, mode) {
     if (mode === 0) {
       // Position mode - the value at position idx is a pointer
-      return this.currentData[this.currentData[idx]];
+      return this.currentData[idx];
     } else if (mode === 1) {
       // Immediate mode - the value at position idx is the one we want
-      return this.currentData[idx];
+      return idx;
+    } else if (mode === 2) {
+      return this.relativeBase + this.currentData[idx];
     }
   }
 
+  _readFromAddress(addr) {
+    return this.currentData[addr] || 0;
+  }
+
   _doAdd(modes) {
-    const [a, b] = this._readParameters(2, modes);
-    const resAddr = this.currentData[this.instPtr + 3];
+    const [aAddr, bAddr, resAddr] = this._getParamAddresses(3, modes);
+
+    const a = this.currentData[aAddr];
+    const b = this.currentData[bAddr];
 
     if (this.verbose) {
-      console.log(`Doing add, a: ${a}, b: ${b}, resAddr: ${resAddr}`);
+      console.log(
+        `Doing add, a: ${a}, b: ${b}, resAddr: ${resAddr} (set to ${a + b})`
+      );
     }
 
     this.currentData[resAddr] = a + b;
@@ -116,11 +134,15 @@ class Intcode {
   }
 
   _doMult(modes) {
-    const [a, b] = this._readParameters(2, modes);
-    const resAddr = this.currentData[this.instPtr + 3];
+    const [aAddr, bAddr, resAddr] = this._getParamAddresses(3, modes);
+
+    const a = this.currentData[aAddr];
+    const b = this.currentData[bAddr];
 
     if (this.verbose) {
-      console.log(`Doing mult, a: ${a}, b: ${b}, resAddr: ${resAddr}`);
+      console.log(
+        `Doing mult, a: ${a}, b: ${b}, resAddr: ${resAddr} (set to ${a * b})`
+      );
     }
 
     this.currentData[resAddr] = a * b;
@@ -134,7 +156,8 @@ class Intcode {
       return;
     }
 
-    const ptr = this.currentData[this.instPtr + 1];
+    const [ptr] = this._getParamAddresses(1, modes);
+
     const input = this.inputs.pop();
 
     if (this.verbose) {
@@ -147,20 +170,24 @@ class Intcode {
   }
 
   _writeOutput(modes) {
-    const ptr = this.currentData[this.instPtr + 1];
-    const output = this.currentData[ptr];
+    const [ptr] = this._getParamAddresses(1, modes);
+
+    const output = this._readFromAddress(ptr);
 
     if (this.verbose) {
       console.log(`Writing output: ${output}, read from: ${ptr}`);
     }
 
-    this.outputs.push(this.currentData[ptr]);
+    this.outputs.push(output);
 
     this.instPtr += 2;
   }
 
   _jumpIfTrue(modes) {
-    const [jmp, newPtr] = this._readParameters(2, modes);
+    const [jmpAddr, newPtrAddr] = this._getParamAddresses(2, modes);
+
+    const jmp = this.currentData[jmpAddr];
+    const newPtr = this.currentData[newPtrAddr];
 
     if (this.verbose) {
       console.log(`Jump if true: ${jmp}, jump to ${newPtr}`);
@@ -174,7 +201,10 @@ class Intcode {
   }
 
   _jumpIfFalse(modes) {
-    const [jmp, newPtr] = this._readParameters(2, modes);
+    const [jmpAddr, newPtrAddr] = this._getParamAddresses(2, modes);
+
+    const jmp = this.currentData[jmpAddr];
+    const newPtr = this.currentData[newPtrAddr];
 
     if (this.verbose) {
       console.log(`Jump if false: ${jmp}, jump to ${newPtr}`);
@@ -188,11 +218,13 @@ class Intcode {
   }
 
   _lessThan(modes) {
-    const [a, b] = this._readParameters(2, modes);
-    const resAddr = this.currentData[this.instPtr + 3];
+    const [aAddr, bAddr, resAddr] = this._getParamAddresses(3, modes);
+
+    const a = this.currentData[aAddr];
+    const b = this.currentData[bAddr];
 
     if (this.verbose) {
-      console.log(`Check if ${a} < ${b}, store in ${resAddr}`);
+      console.log(`Check if ${a} < ${b}, store in ${resAddr} (got ${a < b})`);
     }
 
     this.currentData[resAddr] = a < b ? 1 : 0;
@@ -201,16 +233,37 @@ class Intcode {
   }
 
   _equals(modes) {
-    const [a, b] = this._readParameters(2, modes);
-    const resAddr = this.currentData[this.instPtr + 3];
+    const [aAddr, bAddr, resAddr] = this._getParamAddresses(3, modes);
+
+    const a = this.currentData[aAddr];
+    const b = this.currentData[bAddr];
 
     if (this.verbose) {
-      console.log(`Check if ${a} === ${b}, store in ${resAddr}`);
+      console.log(
+        `Check if ${a} === ${b}, store in ${resAddr} (got ${a === b})`
+      );
     }
 
     this.currentData[resAddr] = a === b ? 1 : 0;
 
     this.instPtr += 4;
+  }
+
+  _adjustRelativeBase(modes) {
+    const [adjustmentAddr] = this._getParamAddresses(1, modes);
+
+    const adjustment = this.currentData[adjustmentAddr];
+
+    if (this.verbose) {
+      console.log(
+        `Adjusting relative base by ${adjustment}, will become ${this
+          .relativeBase + adjustment}`
+      );
+    }
+
+    this.relativeBase += adjustment;
+
+    this.instPtr += 2;
   }
 }
 
