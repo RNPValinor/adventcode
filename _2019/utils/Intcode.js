@@ -1,13 +1,16 @@
 const _ = require("lodash");
 const getDigits = require("./getDigits");
+const IntcodeStates = require("./IntcodeStates");
 
 class Intcode {
   constructor(data, verbose = false) {
     this.originalData = _.map(data.split(","), num => parseInt(num));
     this.verbose = verbose;
+    this.state = IntcodeStates.Terminated;
   }
 
-  runProgram({ inputs, inputChannel, outputChannel, legacyInputMode = false }) {
+  runProgram({ inputs, legacyInputMode = false }) {
+    this.state = IntcodeStates.Running;
     this.currentData = this.originalData.slice();
 
     if (legacyInputMode) {
@@ -19,17 +22,23 @@ class Intcode {
       this.inputs = inputs;
     }
 
-    inputChannel.on("message", m => this.inputs.unshift(m));
-
     this.outputs = [];
 
     this.instPtr = 0;
 
-    let exit = false;
+    this.resumeExecution();
+  }
+
+  pauseExecution() {
+    this.state = IntcodeStates.Waiting;
+  }
+
+  resumeExecution() {
+    this.state = IntcodeStates.Running;
 
     do {
-      exit = this._runNextInstruction();
-    } while (!exit);
+      this._runNextInstruction();
+    } while (this.state === IntcodeStates.Running);
   }
 
   _runNextInstruction() {
@@ -64,11 +73,12 @@ class Intcode {
         this._equals(modes);
         break;
       case 99:
+        this.state = IntcodeStates.Terminated;
+        break;
       default:
-        return true;
+        console.error(`Unknown opcode encountered: ${opCode}`);
+        break;
     }
-
-    return false;
   }
 
   _readParameters(numParams, modes) {
@@ -119,7 +129,10 @@ class Intcode {
   }
 
   _readInput(modes) {
-    while (this.inputs.length === 0) {}
+    if (this.inputs.length === 0) {
+      this.pauseExecution();
+      return;
+    }
 
     const ptr = this.currentData[this.instPtr + 1];
     const input = this.inputs.pop();
