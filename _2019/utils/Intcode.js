@@ -9,7 +9,7 @@ class Intcode {
     this.state = IntcodeStates.Terminated;
   }
 
-  runProgram({ inputs, legacyInputMode = false }) {
+  runProgram({ inputs = [], legacyInputMode = false } = {}) {
     this.state = IntcodeStates.Running;
     this.currentData = this.originalData.slice();
 
@@ -30,6 +30,14 @@ class Intcode {
     this.resumeExecution();
 
     return this.state;
+  }
+
+  pushInput(val) {
+    this.inputs.push(val);
+  }
+
+  popOutput() {
+    return this.outputs.pop();
   }
 
   pauseExecution() {
