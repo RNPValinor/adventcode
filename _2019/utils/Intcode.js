@@ -9,9 +9,15 @@ class Intcode {
     this.state = IntcodeStates.Terminated;
   }
 
-  runProgram({ inputs = [], legacyInputMode = false } = {}) {
+  runProgram({
+    inputs = [],
+    legacyInputMode = false,
+    dataReplacement = () => {}
+  } = {}) {
     this.state = IntcodeStates.Running;
     this.currentData = this.originalData.slice();
+
+    dataReplacement(this.currentData);
 
     if (legacyInputMode) {
       for (let i = 0, len = inputs.length; i < len; i++) {
