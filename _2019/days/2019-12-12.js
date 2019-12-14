@@ -1,6 +1,7 @@
 const BaseDay = require("./BaseDay");
 const Vector3 = require("../utils/Vector3");
 const fs = require("fs");
+const lcm = require("../utils/lcm");
 
 class Day12 extends BaseDay {
   _loadStartCoords() {
@@ -84,7 +85,82 @@ class Day12 extends BaseDay {
     return energy;
   }
 
-  runPart2() {}
+  _isAlreadySeen(positions, velocities, coord, seen, numSteps) {
+    const key = this._getKey(positions, velocities, coord);
+
+    if (seen[key] !== undefined) {
+      return true;
+    } else {
+      seen[key] = numSteps;
+      return false;
+    }
+  }
+
+  _getKey(positions, velocities, coord) {
+    let key = "";
+
+    for (let i = 0, len = positions.length; i < len; i++) {
+      const pos = positions[i][coord];
+      const vel = velocities[i][coord];
+
+      key += `${pos},${vel},`;
+    }
+
+    return key;
+  }
+
+  runPart2() {
+    const positions = this._loadStartCoords();
+    const velocities = [];
+
+    for (let i = 0, len = positions.length; i < len; i++) {
+      velocities.push(new Vector3(0, 0, 0));
+    }
+
+    let xStart, xCycle, yStart, yCycle, zStart, zCycle;
+
+    const seenX = {
+      "0,0,0,0,0,0,": 0
+    };
+
+    const seenY = {
+      "0,0,0,0,0,0,": 0
+    };
+
+    const seenZ = {
+      "0,0,0,0,0,0,": 0
+    };
+
+    for (let i = 1; !xCycle || !yCycle || !zCycle; i++) {
+      this._doGravity(positions, velocities);
+
+      if (
+        !xCycle &&
+        this._isAlreadySeen(positions, velocities, "x", seenX, i)
+      ) {
+        xStart = seenX[this._getKey(positions, velocities, "x")];
+        xCycle = i - xStart;
+      }
+
+      if (
+        !yCycle &&
+        this._isAlreadySeen(positions, velocities, "y", seenY, i)
+      ) {
+        yStart = seenY[this._getKey(positions, velocities, "y")];
+        yCycle = i - yStart;
+      }
+
+      if (
+        !zCycle &&
+        this._isAlreadySeen(positions, velocities, "z", seenZ, i)
+      ) {
+        zStart = seenZ[this._getKey(positions, velocities, "z")];
+        zCycle = i - zStart;
+      }
+    }
+
+    return lcm([xCycle, yCycle, zCycle]);
+  }
 }
 
 module.exports = Day12;
