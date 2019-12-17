@@ -61,7 +61,7 @@ class Intcode {
   }
 
   _runNextInstruction() {
-    const instructionData = this.currentData[this.instPtr];
+    const instructionData = this._readFromAddress(this.instPtr);
 
     const opCode = instructionData % 100;
     const modes = (instructionData - opCode) / 100;
@@ -117,12 +117,12 @@ class Intcode {
   _loadValue(idx, mode) {
     if (mode === 0) {
       // Position mode - the value at position idx is a pointer
-      return this.currentData[idx];
+      return this._readFromAddress(idx);
     } else if (mode === 1) {
       // Immediate mode - the value at position idx is the one we want
       return idx;
     } else if (mode === 2) {
-      return this.relativeBase + this.currentData[idx];
+      return this.relativeBase + this._readFromAddress(idx);
     }
   }
 
@@ -133,8 +133,8 @@ class Intcode {
   _doAdd(modes) {
     const [aAddr, bAddr, resAddr] = this._getParamAddresses(3, modes);
 
-    const a = this.currentData[aAddr];
-    const b = this.currentData[bAddr];
+    const a = this._readFromAddress(aAddr);
+    const b = this._readFromAddress(bAddr);
 
     if (this.verbose) {
       console.log(
@@ -150,8 +150,8 @@ class Intcode {
   _doMult(modes) {
     const [aAddr, bAddr, resAddr] = this._getParamAddresses(3, modes);
 
-    const a = this.currentData[aAddr];
-    const b = this.currentData[bAddr];
+    const a = this._readFromAddress(aAddr);
+    const b = this._readFromAddress(bAddr);
 
     if (this.verbose) {
       console.log(
@@ -200,8 +200,8 @@ class Intcode {
   _jumpIfTrue(modes) {
     const [jmpAddr, newPtrAddr] = this._getParamAddresses(2, modes);
 
-    const jmp = this.currentData[jmpAddr];
-    const newPtr = this.currentData[newPtrAddr];
+    const jmp = this._readFromAddress(jmpAddr);
+    const newPtr = this._readFromAddress(newPtrAddr);
 
     if (this.verbose) {
       console.log(`Jump if true: ${jmp}, jump to ${newPtr}`);
@@ -217,8 +217,8 @@ class Intcode {
   _jumpIfFalse(modes) {
     const [jmpAddr, newPtrAddr] = this._getParamAddresses(2, modes);
 
-    const jmp = this.currentData[jmpAddr];
-    const newPtr = this.currentData[newPtrAddr];
+    const jmp = this._readFromAddress(jmpAddr);
+    const newPtr = this._readFromAddress(newPtrAddr);
 
     if (this.verbose) {
       console.log(`Jump if false: ${jmp}, jump to ${newPtr}`);
@@ -234,8 +234,8 @@ class Intcode {
   _lessThan(modes) {
     const [aAddr, bAddr, resAddr] = this._getParamAddresses(3, modes);
 
-    const a = this.currentData[aAddr];
-    const b = this.currentData[bAddr];
+    const a = this._readFromAddress(aAddr);
+    const b = this._readFromAddress(bAddr);
 
     if (this.verbose) {
       console.log(`Check if ${a} < ${b}, store in ${resAddr} (got ${a < b})`);
@@ -249,8 +249,8 @@ class Intcode {
   _equals(modes) {
     const [aAddr, bAddr, resAddr] = this._getParamAddresses(3, modes);
 
-    const a = this.currentData[aAddr];
-    const b = this.currentData[bAddr];
+    const a = this._readFromAddress(aAddr);
+    const b = this._readFromAddress(bAddr);
 
     if (this.verbose) {
       console.log(
@@ -266,7 +266,7 @@ class Intcode {
   _adjustRelativeBase(modes) {
     const [adjustmentAddr] = this._getParamAddresses(1, modes);
 
-    const adjustment = this.currentData[adjustmentAddr];
+    const adjustment = this._readFromAddress(adjustmentAddr);
 
     if (this.verbose) {
       console.log(
