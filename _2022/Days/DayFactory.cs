@@ -14,6 +14,7 @@ public static class DayFactory
             6 => new Day6(),
             7 => new Day7(),
             8 => new Day8(),
+            9 => new Day9(),
             _ => throw new ArgumentOutOfRangeException(nameof(day), $"Invalid or missing day: {day}")
         };
     }
