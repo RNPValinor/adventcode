@@ -33,9 +33,7 @@ public abstract class Day
                 this.ProcessInputLine(line);
         }
     }
-
-    protected abstract void ProcessInputLine(string line);
-
+    
     public void PrintSolution()
     {
         Console.WriteLine(FiggleFonts.Banner3.Render($"Advent of Code Day {this._dayNum}"));
@@ -48,6 +46,8 @@ public abstract class Day
         Console.WriteLine(this.Part2Solution);
     }
     
+    protected abstract void ProcessInputLine(string line);
+
     public abstract void SolvePart1();
 
     public abstract void SolvePart2();
