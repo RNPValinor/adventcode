@@ -21,14 +21,14 @@ public class Day11 : Day
 
             if (this._partialMonkey.IsComplete() is false)
                 throw new ArgumentException("Got empty line, but partial monkey is not complete");
-            
+
             Monkeys.Add(this._partialMonkey.GetMonkey());
 
             this._partialMonkey = null;
 
             return;
         }
-        
+
         var parts = line.Trim().Split(':');
 
         this._partialMonkey ??= new PartialMonkey();
@@ -55,13 +55,9 @@ public class Day11 : Day
             case 'I':
                 // If true/false
                 if (parts[0] is "If true")
-                {
                     this._partialMonkey.TruthyMonkey = int.Parse(parts[1].Split(' ').Last());
-                }
                 else
-                {
                     this._partialMonkey.FalsyMonkey = int.Parse(parts[1].Split(' ').Last());
-                }
                 break;
             default:
                 throw new ArgumentException($"Invalid line {line}");
@@ -90,44 +86,36 @@ public class Day11 : Day
         };
     }
 
-    public override void SolvePart1()
+    protected override void SolvePart1()
     {
         if (this._partialMonkey is not null)
         {
             if (this._partialMonkey.IsComplete() is false)
                 throw new ArgumentException("Input processing finished, but incomplete partial monkey found");
-            
+
             Monkeys.Add(this._partialMonkey.GetMonkey());
         }
 
         for (var i = 1; i <= 20; i++)
-        {
             // Round i
             foreach (var monkey in Monkeys)
-            {
                 monkey.DoInspections();
-            }
-        }
 
         this.Part1Solution = GetMonkeyBusiness();
     }
 
-    public override void SolvePart2()
+    protected override void SolvePart2()
     {
         foreach (var monkey in Monkeys)
         {
             monkey.InitialiseModuloItems(Monkeys.Count);
             monkey.ResetNumInspections();
         }
-        
+
         for (var i = 1; i <= 10000; i++)
-        {
             foreach (var monkey in Monkeys)
-            {
                 monkey.DoModuloInspections();
-            }
-        }
-        
+
         this.Part2Solution = GetMonkeyBusiness();
     }
 
@@ -168,7 +156,7 @@ public class Day11 : Day
             return new Monkey(
                 this.Num!.Value,
                 this.Items!,
-                this.Operation!, 
+                this.Operation!,
                 this.TestDivisor!.Value,
                 this.TruthyMonkey!.Value,
                 this.FalsyMonkey!.Value);
@@ -188,7 +176,8 @@ public class Day11 : Day
 
         private int _numInspections;
 
-        public Monkey(int num, List<int> items, Func<int, int> operation, int testDivisor, int truthyMonkey, int falsyMonkey)
+        public Monkey(int num, List<int> items, Func<int, int> operation, int testDivisor, int truthyMonkey,
+            int falsyMonkey)
         {
             this._num = num;
             this._items = items;
@@ -205,10 +194,7 @@ public class Day11 : Day
             {
                 var newItems = new List<int>();
 
-                for (var i = 0; i < numMonkeys; i++)
-                {
-                    newItems.Add(item);
-                }
+                for (var i = 0; i < numMonkeys; i++) newItems.Add(item);
 
                 return newItems;
             }).ToList();
@@ -224,15 +210,17 @@ public class Day11 : Day
             foreach (var item in this._items)
             {
                 this._numInspections++;
-                
-                var worryLevel = this._operation(item);
-                var worryLevelAfterBoredom = (int) Math.Floor(worryLevel / 3d);
 
-                var targetMonkey = worryLevelAfterBoredom % this._testDivisor == 0 ? Monkeys[this._truthyMonkey] : Monkeys[this._falsyMonkey];
-                
+                var worryLevel = this._operation(item);
+                var worryLevelAfterBoredom = (int)Math.Floor(worryLevel / 3d);
+
+                var targetMonkey = worryLevelAfterBoredom % this._testDivisor == 0
+                    ? Monkeys[this._truthyMonkey]
+                    : Monkeys[this._falsyMonkey];
+
                 targetMonkey.AddItem(worryLevelAfterBoredom);
             }
-            
+
             this._items.Clear();
         }
 
@@ -254,17 +242,15 @@ public class Day11 : Day
                     newModuloItems.Add(worryLevel);
 
                     if (i == this._num)
-                    {
                         targetMonkey = worryLevel is 0 ? Monkeys[this._truthyMonkey] : Monkeys[this._falsyMonkey];
-                    }
                 }
-                
+
                 targetMonkey.AddModuloItem(newModuloItems);
             }
-            
+
             this._moduloItems.Clear();
         }
-        
+
         private void AddItem(int item)
         {
             this._items.Add(item);

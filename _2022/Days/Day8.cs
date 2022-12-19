@@ -27,7 +27,7 @@ public class Day8 : Day
 
         var visibleWestTrees = GenerateInitialVisibleTrees();
         var activeEastBeauties = new List<Beauty>();
-        
+
         for (var x = 0; x <= maxCoord; x++)
         {
             var heightStr = line[x].ToString();
@@ -39,27 +39,28 @@ public class Day8 : Day
 
             if (this._y == 0)
             {
-                ProcessFirstLine(tree, x, maxCoord, height);
+                this.ProcessFirstLine(tree, x, maxCoord, height);
             }
             else if (this._y == maxCoord)
             {
-                ProcessLastLine(x, maxCoord, tree, height);
+                this.ProcessLastLine(x, maxCoord, tree, height);
             }
             else if (x == 0)
             {
                 highestSeenXHeight = height;
-                ProcessStartColumnTree(tree);
+                this.ProcessStartColumnTree(tree);
             }
             else if (x == maxCoord)
             {
-                ProcessEndColumnTree(currentVisibleEndXHeights, height, tree, activeEastBeauties);
+                this.ProcessEndColumnTree(currentVisibleEndXHeights, height, tree, activeEastBeauties);
             }
             else
             {
-                highestSeenXHeight = ProcessInnerTree(height, highestSeenXHeight, tree, x, visibleWestTrees, ref currentVisibleEndXHeights, ref activeEastBeauties);
+                highestSeenXHeight = this.ProcessInnerTree(height, highestSeenXHeight, tree, x, visibleWestTrees,
+                    ref currentVisibleEndXHeights, ref activeEastBeauties);
             }
         }
-        
+
         this._y++;
     }
 
@@ -85,7 +86,7 @@ public class Day8 : Day
             this._activeSouthBeautiesByX.Add(x, new List<Beauty>());
         }
     }
-    
+
     private void ProcessLastLine(int x, int maxCoord, Point tree, int height)
     {
         // Last line
@@ -101,43 +102,33 @@ public class Day8 : Day
 
             BadlyNamedProcessEndTree(treesVisibleFromBottom, (height, tree));
 
-            foreach (var (_, visibleEndTree) in treesVisibleFromBottom)
-            {
-                this._visibleTrees.Add(visibleEndTree);
-            }
+            foreach (var (_, visibleEndTree) in treesVisibleFromBottom) this._visibleTrees.Add(visibleEndTree);
 
             // Part 2
-            foreach (var activeBeauty in this._activeSouthBeautiesByX[x])
-            {
-                activeBeauty.SouthScore++;
-            }
+            foreach (var activeBeauty in this._activeSouthBeautiesByX[x]) activeBeauty.SouthScore++;
         }
     }
-    
-    private void ProcessStartColumnTree(Point tree) 
+
+    private void ProcessStartColumnTree(Point tree)
     {
         // First tree
         this._visibleTrees.Add(tree);
     }
 
-    private void ProcessEndColumnTree(LinkedList<(int height, Point pos)> currentVisibleEndXHeights, int height, Point tree, IEnumerable<Beauty> activeEastBeauties)
+    private void ProcessEndColumnTree(LinkedList<(int height, Point pos)> currentVisibleEndXHeights, int height,
+        Point tree, IEnumerable<Beauty> activeEastBeauties)
     {
         // Last tree
         BadlyNamedProcessEndTree(currentVisibleEndXHeights, (height, tree));
 
-        foreach (var (_, visibleEndTree) in currentVisibleEndXHeights)
-        {
-            this._visibleTrees.Add(visibleEndTree);
-        }
+        foreach (var (_, visibleEndTree) in currentVisibleEndXHeights) this._visibleTrees.Add(visibleEndTree);
 
         // Part 2
-        foreach (var activeBeauty in activeEastBeauties)
-        {
-            activeBeauty.EastScore++;
-        }
+        foreach (var activeBeauty in activeEastBeauties) activeBeauty.EastScore++;
     }
-    
-    private int ProcessInnerTree(int height, int highestSeenXHeight, Point tree, int x, IDictionary<int, int> visibleWestTrees,
+
+    private int ProcessInnerTree(int height, int highestSeenXHeight, Point tree, int x,
+        IDictionary<int, int> visibleWestTrees,
         ref LinkedList<(int height, Point pos)> currentVisibleEndXHeights, ref List<Beauty> activeEastBeauties)
     {
         // Some middle tree
@@ -183,7 +174,7 @@ public class Day8 : Day
         };
 
         this._beauties.Add(tree, beauty);
-        
+
         UpdateVisibleTreesInDirection(visibleNorthTrees, height);
         UpdateVisibleTreesInDirection(visibleWestTrees, height);
 
@@ -193,10 +184,7 @@ public class Day8 : Day
         {
             activeBeauty.EastScore++;
 
-            if (activeBeauty.TreeHeight > height)
-            {
-                newActiveEastBeauties.Add(activeBeauty);
-            }
+            if (activeBeauty.TreeHeight > height) newActiveEastBeauties.Add(activeBeauty);
         }
 
         activeEastBeauties = newActiveEastBeauties;
@@ -209,26 +197,23 @@ public class Day8 : Day
         {
             activeBeauty.SouthScore++;
 
-            if (activeBeauty.TreeHeight > height)
-            {
-                newActiveSouthBeauties.Add(activeBeauty);
-            }
+            if (activeBeauty.TreeHeight > height) newActiveSouthBeauties.Add(activeBeauty);
         }
 
         newActiveSouthBeauties.Add(beauty);
 
         this._activeSouthBeautiesByX.Remove(x);
         this._activeSouthBeautiesByX.Add(x, newActiveSouthBeauties);
-        
+
         return highestSeenXHeight;
     }
 
-    private static void BadlyNamedProcessEndTree(LinkedList<(int height, Point pos)> trees, (int height, Point pos) newTree)
+    private static void BadlyNamedProcessEndTree(LinkedList<(int height, Point pos)> trees,
+        (int height, Point pos) newTree)
     {
         var lastTree = trees.Last;
 
         while (lastTree is not null)
-        {
             if (lastTree.Value.height <= newTree.height)
             {
                 // Will be hidden by the new tree, so remove.
@@ -239,7 +224,6 @@ public class Day8 : Day
             {
                 break;
             }
-        }
 
         trees.AddLast(newTree);
     }
@@ -248,10 +232,7 @@ public class Day8 : Day
     {
         var visibleTreesInDirection = new Dictionary<int, int>();
 
-        for (var i = 0; i <= 9; i++)
-        {
-            visibleTreesInDirection.Add(i, 1);
-        }
+        for (var i = 0; i <= 9; i++) visibleTreesInDirection.Add(i, 1);
 
         return visibleTreesInDirection;
     }
@@ -260,18 +241,18 @@ public class Day8 : Day
     {
         for (var i = 0; i <= 9; i++)
         {
-            var newValue = i <= newTreeHeight ? 1 : (visibleTrees[i] + 1);
+            var newValue = i <= newTreeHeight ? 1 : visibleTrees[i] + 1;
             visibleTrees.Remove(i);
             visibleTrees.Add(i, newValue);
         }
     }
 
-    public override void SolvePart1()
+    protected override void SolvePart1()
     {
         this.Part1Solution = this._visibleTrees.Count.ToString();
     }
 
-    public override void SolvePart2()
+    protected override void SolvePart2()
     {
         this.Part2Solution = this._beauties.Values.Max(b => b.GetScenicScore()).ToString();
     }
@@ -279,7 +260,7 @@ public class Day8 : Day
     private class Beauty
     {
         public readonly int TreeHeight;
-        
+
         public int NorthScore;
         public int SouthScore;
         public int WestScore;
@@ -287,7 +268,7 @@ public class Day8 : Day
 
         public Beauty(int treeHeight)
         {
-            TreeHeight = treeHeight;
+            this.TreeHeight = treeHeight;
         }
 
         public int GetScenicScore()

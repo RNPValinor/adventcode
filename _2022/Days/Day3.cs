@@ -3,7 +3,7 @@ namespace _2022.Days;
 public class Day3 : Day
 {
     private readonly List<Backpack> _backpacks = new();
-    
+
     public Day3() : base(3)
     {
     }
@@ -13,7 +13,7 @@ public class Day3 : Day
         this._backpacks.Add(new Backpack(line));
     }
 
-    public override void SolvePart1()
+    protected override void SolvePart1()
     {
         Console.WriteLine($"a: {(int)'a'}");
         Console.WriteLine($"A: {(int)'A'}");
@@ -22,7 +22,7 @@ public class Day3 : Day
         this.Part1Solution = prioritySum.ToString();
     }
 
-    public override void SolvePart2()
+    protected override void SolvePart2()
     {
         var prioritySum = 0;
 
@@ -43,15 +43,11 @@ public class Day3 : Day
     private int ConvertItemToPriority(char item)
     {
         if (item <= 'Z')
-        {
             // Uppercase
             return item - 'A' + 27;
-        }
         else
-        {
             // Lowercase
             return item - 'a' + 1;
-        }
     }
 
     private class Backpack
@@ -64,7 +60,7 @@ public class Day3 : Day
             var halfContentsLength = contents.Length / 2;
             var compartment1 = new HashSet<char>();
             var compartment2 = new HashSet<char>();
-            
+
             for (var i = 0; i < halfContentsLength; i++)
             {
                 var item1 = contents[i];
@@ -74,13 +70,8 @@ public class Day3 : Day
                 compartment2.Add(item2);
 
                 if (compartment1.Contains(item2))
-                {
                     this.CommonItem = item2;
-                }
-                else if (compartment2.Contains(item1))
-                {
-                    this.CommonItem = item1;
-                }
+                else if (compartment2.Contains(item1)) this.CommonItem = item1;
 
                 this.AllItems.Add(item1);
                 this.AllItems.Add(item2);

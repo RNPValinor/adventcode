@@ -7,8 +7,8 @@ public class PlainFile : IFile
 
     public PlainFile(int size, string name)
     {
-        _size = size;
-        _name = name;
+        this._size = size;
+        this._name = name;
     }
 
     public string GetName()

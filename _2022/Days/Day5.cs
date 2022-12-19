@@ -21,7 +21,7 @@ public class Day5 : Day
         {
             if (this._stacks is null || this._v2Stacks is null)
                 throw new ApplicationException("Stacks have not been initialised when reading instructions!");
-            
+
             var match = this._instructionRegex.Match(line);
 
             var numToMove = int.Parse(match.Groups[1].Value);
@@ -37,10 +37,7 @@ public class Day5 : Day
                 numToMove--;
             }
 
-            while (intermediateV2Stack.TryPop(out var item))
-            {
-                this._v2Stacks[toStackId].Push(item);
-            }
+            while (intermediateV2Stack.TryPop(out var item)) this._v2Stacks[toStackId].Push(item);
         }
         else if (line.Length == 0)
         {
@@ -68,7 +65,7 @@ public class Day5 : Day
                     newStack.Push(item);
                     newV2Stack.Push(item);
                 }
-                
+
                 this._stacks.Add(newStack);
                 this._v2Stacks.Add(newV2Stack);
             }
@@ -82,50 +79,38 @@ public class Day5 : Day
             {
                 this._stacks = new List<Stack<char>>(numStacks);
 
-                for (var i = 0; i < numStacks; i++)
-                {
-                    this._stacks.Add(new Stack<char>());
-                }
+                for (var i = 0; i < numStacks; i++) this._stacks.Add(new Stack<char>());
             }
 
             for (var i = 0; i < numStacks; i++)
             {
-                var item = line[(i * 4) + 1];
+                var item = line[i * 4 + 1];
 
-                if (item != ' ')
-                {
-                    this._stacks[i].Push(item);
-                }
+                if (item != ' ') this._stacks[i].Push(item);
             }
         }
     }
 
-    public override void SolvePart1()
+    protected override void SolvePart1()
     {
         var messageBuilder = new StringBuilder();
 
         if (this._stacks is null)
             throw new ApplicationException("Stacks is null when trying to get solution!");
 
-        foreach (var stack in this._stacks)
-        {
-            messageBuilder.Append(stack.Peek());
-        }
+        foreach (var stack in this._stacks) messageBuilder.Append(stack.Peek());
 
         this.Part1Solution = messageBuilder.ToString();
     }
 
-    public override void SolvePart2()
+    protected override void SolvePart2()
     {
         var messageBuilder = new StringBuilder();
 
         if (this._v2Stacks is null)
             throw new ApplicationException("Stacks is null when trying to get solution!");
 
-        foreach (var stack in this._v2Stacks)
-        {
-            messageBuilder.Append(stack.Peek());
-        }
+        foreach (var stack in this._v2Stacks) messageBuilder.Append(stack.Peek());
 
         this.Part2Solution = messageBuilder.ToString();
     }

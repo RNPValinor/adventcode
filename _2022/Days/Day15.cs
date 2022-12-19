@@ -11,7 +11,7 @@ public class Day15 : Day
 
     private const int YIndexOfInterestingLine = 2000000;
     private const int MaxDistressBeaconCoord = YIndexOfInterestingLine * 2;
-    
+
     public Day15() : base(15)
     {
     }
@@ -22,18 +22,18 @@ public class Day15 : Day
 
         if (parts.Length is not 10)
             throw new ArgumentException($"Got invalid line: {line}");
-        
+
         // For each part remove the x= or y=, and the trailing , or :
         // Except for the last part, which ends at the end of the line
         var sensorX = int.Parse(string.Join("", parts[2].Substring(2, parts[2].Length - 3)));
         var sensorY = int.Parse(string.Join("", parts[3].Substring(2, parts[3].Length - 3)));
-        
+
         var beaconX = int.Parse(string.Join("", parts[8].Substring(2, parts[8].Length - 3)));
         var beaconY = int.Parse(string.Join("", parts[9].Substring(2, parts[9].Length - 2)));
 
         var sensor = new Point(sensorX, sensorY);
         var beacon = new Point(beaconX, beaconY);
-        
+
         this.ProcessSensorAndBeacon(sensor, beacon);
     }
 
@@ -60,19 +60,19 @@ public class Day15 : Day
                 this._interestingNoBeaconSpots.Add(right);
             }
         }
-        
+
         this._sensors.Add(sensor, manDist);
-        
+
         // If there is a beacon on the line of interest then it's not a no-beacon spot!
         this._interestingNoBeaconSpots.Remove(beacon);
     }
 
-    public override void SolvePart1()
+    protected override void SolvePart1()
     {
         this.Part1Solution = this._interestingNoBeaconSpots.Count.ToString();
     }
 
-    public override void SolvePart2()
+    protected override void SolvePart2()
     {
         for (var y = 0; y <= MaxDistressBeaconCoord; y++)
         {
@@ -83,14 +83,12 @@ public class Day15 : Day
                 var dy = Math.Abs(sensor.Y - y);
 
                 if (dy > manDist)
-                {
                     // No overlap
                     continue;
-                }
 
                 var rangeStart = sensor.X - (manDist - dy);
                 var rangeEnd = sensor.X + (manDist - dy);
-                
+
                 ranges.Add(new Range(rangeStart, rangeEnd));
             }
 
@@ -106,7 +104,7 @@ public class Day15 : Day
     private static bool CheckIfGapInRow(IEnumerable<Range> ranges, out int gapX)
     {
         gapX = -1;
-        
+
         // First collapse the ranges.
         var collapsedRanges = ranges
             .OrderBy(r => r.LowerBound)
@@ -121,35 +119,27 @@ public class Day15 : Day
                     var lastRange = acc.Last();
 
                     if (range.LowerBound <= lastRange.UpperBound)
-                    {
                         // Overlap
                         lastRange.UpperBound = Math.Max(lastRange.UpperBound, range.UpperBound);
-                    }
                     else if (range.LowerBound == lastRange.UpperBound + 1)
-                    {
                         // Adjacent
                         lastRange.UpperBound = range.UpperBound;
-                    }
                     else
-                    {
                         // No overlap
                         acc.Add(range);
-                    }
                 }
 
                 return acc;
             })
             .ToList();
-        
+
         // Check if ranges cover entire relevant row
         foreach (var range in collapsedRanges.Where(range => range.LowerBound <= 0))
         {
             if (range.UpperBound >= MaxDistressBeaconCoord)
-            {
                 // Complete overlap
                 return false;
-            }
-                
+
             // Only partial overlap!
             gapX = range.UpperBound + 1;
             return true;

@@ -4,8 +4,8 @@ namespace _2022.Days;
 
 public class Day1 : Day
 {
-    private readonly OrderedCollection<int> _topBackpacks = new(); 
-    
+    private readonly OrderedCollection<int> _topBackpacks = new();
+
     public Day1() : base(1)
     {
     }
@@ -28,7 +28,7 @@ public class Day1 : Day
         }
     }
 
-    public override void SolvePart1()
+    protected override void SolvePart1()
     {
         this.Part1Solution = this._topBackpacks.Last().ToString();
     }
@@ -45,8 +45,8 @@ public class Day1 : Day
             this._topBackpacks.Add(calorieCount);
         }
     }
-    
-    public override void SolvePart2()
+
+    protected override void SolvePart2()
     {
         this.Part2Solution = this._topBackpacks.Sum().ToString();
     }

@@ -5,7 +5,7 @@ namespace _2022.Days;
 public class Day18 : Day
 {
     private readonly Dictionary<Point3D, Point3D> _exposedFaceMidpoints = new();
-    
+
     public Day18() : base(18)
     {
     }
@@ -19,10 +19,10 @@ public class Day18 : Day
 
         if (int.TryParse(coords[0], out var x) is false)
             throw new ArgumentException($"Expected {coords[0]} to be an integer");
-        
+
         if (int.TryParse(coords[1], out var y) is false)
             throw new ArgumentException($"Expected {coords[1]} to be an integer");
-        
+
         if (int.TryParse(coords[2], out var z) is false)
             throw new ArgumentException($"Expected {coords[2]} to be an integer");
 
@@ -33,13 +33,9 @@ public class Day18 : Day
         var cubeMidPoint = new Point3D(x + 0.5, y + 0.5, z + 0.5);
 
         foreach (var face in faces)
-        {
             if (this._exposedFaceMidpoints.Remove(face) is false)
-            {
                 // Remove if already there, add if not
                 this._exposedFaceMidpoints.Add(face, cubeMidPoint);
-            }
-        }
     }
 
     private static IEnumerable<Point3D> GetFaces(Point3D cubeStart)
@@ -61,24 +57,24 @@ public class Day18 : Day
         return faces;
     }
 
-    public override void SolvePart1()
+    protected override void SolvePart1()
     {
         this.Part1Solution = this._exposedFaceMidpoints.Count.ToString();
     }
 
-    public override void SolvePart2()
+    protected override void SolvePart2()
     {
         var surfaces = new List<HashSet<Point3D>>();
-        
+
         var consideredFaces = new HashSet<Point3D>();
-        
+
         var currentSurface = new HashSet<Point3D>();
 
         foreach (var exposedFace in this._exposedFaceMidpoints)
         {
             if (consideredFaces.Contains(exposedFace.Key))
                 continue;
-            
+
             var faceQueue = new Queue<Point3D>();
             faceQueue.Enqueue(exposedFace.Key);
 
@@ -90,12 +86,8 @@ public class Day18 : Day
                 var adjacentFaces = this.GetAdjacentFaces(face);
 
                 foreach (var adjacentFace in adjacentFaces)
-                {
                     if (currentSurface.Contains(adjacentFace) is false)
-                    {
                         faceQueue.Enqueue(adjacentFace);
-                    }
-                }
             }
 
             surfaces.Add(currentSurface);
@@ -111,7 +103,7 @@ public class Day18 : Day
 
         var cubeCenter = this._exposedFaceMidpoints[face];
         var velToCenter = GetVelocity(face, cubeCenter);
-        
+
         // Check x +/- 0.5
         if (velToCenter.X is 0)
         {
@@ -129,9 +121,10 @@ public class Day18 : Day
 
                 adjacentFaces.Add(this._exposedFaceMidpoints.ContainsKey(faceToCheck)
                     ? faceToCheck // Face in same plane
-                    : new Point3D(face.X + 0.5, face.Y + velToCenter.Y, face.Z + velToCenter.Z)); // Face across edge of this cube
+                    : new Point3D(face.X + 0.5, face.Y + velToCenter.Y,
+                        face.Z + velToCenter.Z)); // Face across edge of this cube
             }
-            
+
             // Negative x direction
             faceToCheck = new Point3D(face.X - 0.5, face.Y - velToCenter.Y, face.Z - velToCenter.Z);
 
@@ -146,10 +139,11 @@ public class Day18 : Day
 
                 adjacentFaces.Add(this._exposedFaceMidpoints.ContainsKey(faceToCheck)
                     ? faceToCheck // Face in same plane
-                    : new Point3D(face.X - 0.5, face.Y + velToCenter.Y, face.Z + velToCenter.Z)); // Face across edge of this cube
+                    : new Point3D(face.X - 0.5, face.Y + velToCenter.Y,
+                        face.Z + velToCenter.Z)); // Face across edge of this cube
             }
         }
-        
+
         if (velToCenter.Y is 0)
         {
             // Positive y direction
@@ -166,9 +160,10 @@ public class Day18 : Day
 
                 adjacentFaces.Add(this._exposedFaceMidpoints.ContainsKey(faceToCheck)
                     ? faceToCheck // Face in same plane
-                    : new Point3D(face.X + velToCenter.X, face.Y + 0.5, face.Z + velToCenter.Z)); // Face across edge of this cube
+                    : new Point3D(face.X + velToCenter.X, face.Y + 0.5,
+                        face.Z + velToCenter.Z)); // Face across edge of this cube
             }
-            
+
             // Negative y direction
             faceToCheck = new Point3D(face.X - velToCenter.X, face.Y - 0.5, face.Z - velToCenter.Z);
 
@@ -183,10 +178,11 @@ public class Day18 : Day
 
                 adjacentFaces.Add(this._exposedFaceMidpoints.ContainsKey(faceToCheck)
                     ? faceToCheck // Face in same plane
-                    : new Point3D(face.X + velToCenter.X, face.Y - 0.5, face.Z + velToCenter.Z)); // Face across edge of this cube
+                    : new Point3D(face.X + velToCenter.X, face.Y - 0.5,
+                        face.Z + velToCenter.Z)); // Face across edge of this cube
             }
         }
-        
+
         if (velToCenter.Z is 0)
         {
             // Positive x direction
@@ -203,9 +199,10 @@ public class Day18 : Day
 
                 adjacentFaces.Add(this._exposedFaceMidpoints.ContainsKey(faceToCheck)
                     ? faceToCheck // Face in same plane
-                    : new Point3D(face.X + velToCenter.X, face.Y + velToCenter.Y, face.Z + 0.5)); // Face across edge of this cube
+                    : new Point3D(face.X + velToCenter.X, face.Y + velToCenter.Y,
+                        face.Z + 0.5)); // Face across edge of this cube
             }
-            
+
             // Negative x direction
             faceToCheck = new Point3D(face.X - velToCenter.X, face.Y - velToCenter.Y, face.Z - 0.5);
 
@@ -220,7 +217,8 @@ public class Day18 : Day
 
                 adjacentFaces.Add(this._exposedFaceMidpoints.ContainsKey(faceToCheck)
                     ? faceToCheck // Face in same plane
-                    : new Point3D(face.X + velToCenter.X, face.Y + velToCenter.Y, face.Z - 0.5)); // Face across edge of this cube
+                    : new Point3D(face.X + velToCenter.X, face.Y + velToCenter.Y,
+                        face.Z - 0.5)); // Face across edge of this cube
             }
         }
 

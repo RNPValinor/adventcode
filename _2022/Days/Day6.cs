@@ -4,7 +4,7 @@ public class Day6 : Day
 {
     private int _startOfPacketMarker = 0;
     private int _startOfMessageMarker = 0;
-    
+
     public Day6() : base(6)
     {
     }
@@ -18,7 +18,7 @@ public class Day6 : Day
         foreach (var c in line)
         {
             numCharactersRead++;
-            
+
             currentCandidate.AddLast(c);
 
             if (numToSkip > 0)
@@ -27,14 +27,11 @@ public class Day6 : Day
                 numToSkip--;
                 continue;
             }
-            
+
             if (this._startOfPacketMarker is 0)
             {
                 // Solving part 1
-                if (currentCandidate.Count < 4)
-                {
-                    continue;
-                }
+                if (currentCandidate.Count < 4) continue;
 
                 numToSkip = GetCharSkip(currentCandidate);
 
@@ -47,10 +44,7 @@ public class Day6 : Day
             else
             {
                 // Solving part 2
-                if (currentCandidate.Count < 14)
-                {
-                    continue;
-                }
+                if (currentCandidate.Count < 14) continue;
 
                 numToSkip = GetCharSkip(currentCandidate);
 
@@ -60,7 +54,7 @@ public class Day6 : Day
                     break;
                 }
             }
-            
+
             currentCandidate.RemoveFirst();
         }
     }
@@ -80,10 +74,7 @@ public class Day6 : Day
         {
             var c = currentNode.Value;
 
-            if (seenCharacters.Contains(c))
-            {
-                return numToSkip;
-            }
+            if (seenCharacters.Contains(c)) return numToSkip;
 
             seenCharacters.Add(c);
 
@@ -94,12 +85,12 @@ public class Day6 : Day
         return numToSkip;
     }
 
-    public override void SolvePart1()
+    protected override void SolvePart1()
     {
         this.Part1Solution = this._startOfPacketMarker.ToString();
     }
 
-    public override void SolvePart2()
+    protected override void SolvePart2()
     {
         this.Part2Solution = this._startOfMessageMarker.ToString();
     }

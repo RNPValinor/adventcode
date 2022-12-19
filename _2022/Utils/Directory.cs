@@ -10,15 +10,15 @@ public class Directory : IFile
 
     public Directory(Directory? parent, string name)
     {
-        _parent = parent;
-        _name = name;
+        this._parent = parent;
+        this._name = name;
     }
 
     public int GetSize()
     {
         if (this._cachedSize is 0)
             this._cachedSize = this._children.Sum(c => c.GetSize());
-        
+
         return this._cachedSize;
     }
 
@@ -31,7 +31,7 @@ public class Directory : IFile
     {
         if (this._parent is null)
             throw new NullReferenceException($"Attempted to get parent for {this.GetName()}, but parent is null!");
-        
+
         return this._parent;
     }
 
@@ -39,10 +39,7 @@ public class Directory : IFile
     {
         var child = this._children.FirstOrDefault(c => c.GetName() == name);
 
-        if (child is Directory childDirectory)
-        {
-            return childDirectory;
-        }
+        if (child is Directory childDirectory) return childDirectory;
 
         throw new DirectoryNotFoundException($"Failed to find directory {name} within {this.GetName()}");
     }

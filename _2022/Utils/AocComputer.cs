@@ -6,15 +6,14 @@ public class AocComputer
 {
     private readonly Directory _root;
     private Directory _currentDirectory;
-    
+
     private readonly Regex _commandRegex = new("^\\$ ([a-z]+) ?(.*)?$");
     private readonly Regex _fileRegex = new("^(dir|[0-9]+) (.*)$");
 
-    
 
     public AocComputer()
     {
-        _root = new Directory(null, "/");
+        this._root = new Directory(null, "/");
         this._currentDirectory = this._root;
     }
 
@@ -25,10 +24,7 @@ public class AocComputer
             // Command
             var match = this._commandRegex.Match(line);
 
-            if (!match.Success)
-            {
-                throw new ArgumentException($"Unrecognized console line: {line}");
-            }
+            if (!match.Success) throw new ArgumentException($"Unrecognized console line: {line}");
 
             var command = match.Groups[1].Value;
 
@@ -49,10 +45,7 @@ public class AocComputer
             // File or directory
             var match = this._fileRegex.Match(line);
 
-            if (!match.Success)
-            {
-                throw new ArgumentException($"Unrecognized console line: {line}");
-            }
+            if (!match.Success) throw new ArgumentException($"Unrecognized console line: {line}");
 
             var dirOrFileSize = match.Groups[1].Value;
             var name = match.Groups[2].Value;
@@ -64,10 +57,8 @@ public class AocComputer
             else
             {
                 if (!int.TryParse(dirOrFileSize, out var size))
-                {
                     throw new ArgumentException("Failed to parse file size");
-                }
-                
+
                 this._currentDirectory.AddChild(new PlainFile(size, name));
             }
         }

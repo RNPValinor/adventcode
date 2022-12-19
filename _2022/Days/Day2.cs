@@ -3,7 +3,7 @@ namespace _2022.Days;
 public class Day2 : Day
 {
     private readonly IList<Match> _matches = new List<Match>();
-    
+
     public Day2() : base(2)
     {
     }
@@ -13,12 +13,12 @@ public class Day2 : Day
         this._matches.Add(ParseMatch(line));
     }
 
-    public override void SolvePart1()
+    protected override void SolvePart1()
     {
         this.Part1Solution = this._matches.Sum(m => m.GetScore()).ToString();
     }
 
-    public override void SolvePart2()
+    protected override void SolvePart2()
     {
         this.Part2Solution = this._matches.Sum(m => m.GetMark2Score()).ToString();
     }
@@ -52,7 +52,7 @@ public class Day2 : Day
     {
         private readonly Hand _player1;
         private readonly Hand _player2;
-        
+
         public Match(Hand player1, Hand player2)
         {
             this._player1 = player1;
@@ -80,7 +80,7 @@ public class Day2 : Day
             {
                 case Hand.Rock:
                     // Lose
-                    return ((int)this._player1 - 1 + 2) % 3 + 1; 
+                    return ((int)this._player1 - 1 + 2) % 3 + 1;
                 case Hand.Paper:
                     // Draw
                     return (int)this._player1 + 3;
