@@ -8,10 +8,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CodeBits.OrderedCollection" Version="2.0.0"/>
-        <PackageReference Include="Figgle" Version="0.4.1"/>
-        <PackageReference Include="ShellProgressBar" Version="5.2.0"/>
-        <PackageReference Include="VectorAndPoint.NetStandard" Version="1.2.20"/>
+        <PackageReference Include="CodeBits.OrderedCollection" Version="2.0.0" />
+        <PackageReference Include="Figgle" Version="0.4.1" />
+        <PackageReference Include="ShellProgressBar" Version="5.2.0" />
+        <PackageReference Include="VectorAndPoint.NetStandard" Version="1.2.20" />
     </ItemGroup>
 
 </Project>
