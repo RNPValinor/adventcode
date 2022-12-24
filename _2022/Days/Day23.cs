@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Drawing;
+using _2022.Utils;
 
 namespace _2022.Days;
 
@@ -218,11 +219,5 @@ public class Day23 : Day
         this.Part2Solution = numRounds.ToString();
     }
 
-    private enum Direction
-    {
-        North,
-        South,
-        West,
-        East
-    }
+    
 }
