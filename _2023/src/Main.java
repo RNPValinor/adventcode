@@ -1,6 +1,8 @@
 import org.apache.commons.cli.*;
 import solvers.Solvers;
 
+import java.time.LocalDate;
+
 public class Main {
     public static void main(String[] args) {
         var options = new Options()
@@ -18,7 +20,7 @@ public class Main {
             var cmdLine = parser.parse(options, args);
             var dayStr = cmdLine.getOptionValue('d');
 
-            var day = Integer.parseInt(dayStr);
+            var day = dayStr == null ? LocalDate.now().getDayOfMonth() : Integer.parseInt(dayStr);
 
             var solver = Solvers.GetSolver(day);
 
