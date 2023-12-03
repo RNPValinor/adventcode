@@ -51,7 +51,7 @@ public class Day1Solver extends BaseSolver {
             }
 
             candidateLastMatch = intOrStringMatcher.group(1);
-            
+
             matchIndex = intOrStringMatcher.start(1) + 1;
         }
 
