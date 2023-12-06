@@ -3,6 +3,7 @@ package solvers;
 import java.util.*;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 public class Day5Solver extends BaseSolver {
     private boolean _hasParsedSeeds = false;
     private final HashSet<Long> _currentValues = new HashSet<>();

@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 public class Day1Solver extends BaseSolver {
     private final List<Integer> _calibrationValuesPart1 = new ArrayList<>();
     private final List<Integer> _calibrationValuesPart2 = new ArrayList<>();
 
-    public Day1Solver()
-    {
+    public Day1Solver() {
         super(1);
     }
 
@@ -66,8 +66,7 @@ public class Day1Solver extends BaseSolver {
         this._calibrationValuesPart2.add(firstMatch * 10 + lastMatch);
     }
 
-    private Integer ConvertStringOrIntToInteger(String stringOrInt)
-    {
+    private Integer ConvertStringOrIntToInteger(String stringOrInt) {
         return switch (stringOrInt) {
             case "one" -> 1;
             case "two" -> 2;

@@ -3,6 +3,7 @@ package solvers;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("unused")
 public class Day3Solver extends BaseSolver {
     private List<Integer> lastLineSymbols = new ArrayList<>();
     private List<PartNumber> unmatchedLastLineNumbers = new ArrayList<>();
@@ -10,7 +11,7 @@ public class Day3Solver extends BaseSolver {
     private List<PartNumber> lastLineNumbers = new ArrayList<>();
     private List<PartNumber> secondLastLineNumbers = new ArrayList<>();
     private List<Integer> lastLineCogs = new ArrayList<>();
-    
+
     private int SumOfValidIds = 0;
     private int SumOfGearRatios = 0;
 
@@ -98,8 +99,8 @@ public class Day3Solver extends BaseSolver {
 
     private boolean IsNumberAdjacentToSymbolOnLastLine(PartNumber partNumber) {
         return this.lastLineSymbols
-            .stream()
-            .anyMatch(x -> x >= partNumber.StartX - 1 && x <= partNumber.EndX + 1);
+                .stream()
+                .anyMatch(x -> x >= partNumber.StartX - 1 && x <= partNumber.EndX + 1);
     }
 
     private void CheckForCogsOnLastLine(List<PartNumber> numbersOnLine) {

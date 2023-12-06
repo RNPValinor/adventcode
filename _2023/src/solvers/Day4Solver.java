@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("unused")
 public class Day4Solver extends BaseSolver {
     private int TotalPoints = 0;
     private int TotalNumScratchcards = 0;

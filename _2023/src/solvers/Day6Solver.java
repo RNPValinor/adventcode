@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.regex.Pattern;
 
+@SuppressWarnings("unused")
 public class Day6Solver extends BaseSolver {
     private final Pattern _numberPattern = Pattern.compile("([0-9]+)");
 

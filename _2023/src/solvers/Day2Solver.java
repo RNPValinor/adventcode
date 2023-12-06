@@ -6,6 +6,7 @@ public class Day2Solver extends BaseSolver {
     private int SumOfValidGameIds = 0;
     private int SumOfGamePowers = 0;
 
+    @SuppressWarnings("unused")
     public Day2Solver() {
         super(2);
     }
