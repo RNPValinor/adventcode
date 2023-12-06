@@ -76,8 +76,6 @@ public class Day6Solver extends BaseSolver {
             maxTime--;
         }
 
-        System.out.println("For (" + totalTime + ", " + record + "), got times in range [" + minTime + "..." + maxTime + "]");
-
         return maxTime - minTime + 1;
     }
 
