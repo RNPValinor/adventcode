@@ -8,6 +8,7 @@ public class Solvers {
             case 3 -> new Day3Solver();
             case 4 -> new Day4Solver();
             case 5 -> new Day5Solver();
+            case 6 -> new Day6Solver();
             default -> throw new IndexOutOfBoundsException("Day not supported: " + day);
         };
     }
