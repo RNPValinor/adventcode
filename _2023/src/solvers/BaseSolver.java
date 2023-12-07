@@ -46,6 +46,8 @@ public abstract class BaseSolver {
         System.out.println(this.SolvePart2());
         var part2TimeDone = clock.nanos();
 
+        System.out.println();
+        System.out.println();
         System.out.println("Lines processed in " + (lineProcessTimeDone - start) + "ns");
         System.out.println("Part 1 solved in " + (part1TimeDone - lineProcessTimeDone) + "ns");
         System.out.println("Part 2 solved in " + (part2TimeDone - part1TimeDone) + "ns");
