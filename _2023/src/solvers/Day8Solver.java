@@ -62,32 +62,30 @@ public class Day8Solver extends BaseSolver {
                 .stream()
                 .filter(n -> n.charAt(2) == 'A')
                 .toArray(String[]::new);
+
         var found = 0;
-        var foundMask = 0;
         var stepIdx = 0;
 
-        while (found < nodes.length) {
+        while (nodes.length > 0) {
             var instruction = this._instructions.get(stepIdx++ % this._instructions.size());
 
             for (int i = 0; i < nodes.length; i++) {
                 nodes[i] = this._map.get(nodes[i])[instruction];
             }
 
-            for (int i = 0; i < nodes.length; i++) {
-                if ((foundMask & (1 << i)) == 0 && nodes[i].charAt(2) == 'Z') {
-                    foundMask |= 1 << i;
-                    found++;
+            var nextNodes = new ArrayList<String>(nodes.length);
 
+            for (String node : nodes) {
+                if (node.charAt(2) == 'Z') {
                     numSteps = Maths.lcm(numSteps, stepIdx);
+                } else {
+                    nextNodes.add(node);
                 }
             }
+
+            nodes = nextNodes.toArray(String[]::new);
         }
 
         return String.valueOf(numSteps);
-    }
-
-    private enum Instruction {
-        L,
-        R
     }
 }
