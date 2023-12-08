@@ -1,10 +1,8 @@
 package solvers;
 
 import utils.Maths;
-import utils.Tuple;
 
 import java.util.*;
-import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class Day8Solver extends BaseSolver {
@@ -83,14 +81,6 @@ public class Day8Solver extends BaseSolver {
                     numSteps = Maths.lcm(numSteps, stepIdx);
                 }
             }
-        }
-
-        if (numSteps <= 14541741720L) {
-            System.err.println("Part 2 answer too low");
-        }
-
-        if (numSteps >= 3080679468441011440L) {
-            System.err.println("Part 2 answer too high");
         }
 
         return String.valueOf(numSteps);
