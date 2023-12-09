@@ -34,9 +34,7 @@ public class Day9Solver extends BaseSolver {
     }
 
     private Integer[] getPrevAndNextForSequence(List<Integer> sequence) {
-        if (sequence.isEmpty()) {
-            throw new IllegalArgumentException("Got an empty sequence when trying to get next");
-        } else if (sequence.stream().allMatch(n -> n == 0)) {
+        if (sequence.get(0) == 0 && sequence.get(sequence.size() - 1) == 0) {
             return new Integer[]{0, 0};
         }
 
