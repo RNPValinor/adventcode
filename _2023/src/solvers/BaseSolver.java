@@ -16,9 +16,11 @@ public abstract class BaseSolver {
 
     public void Solve() {
         var clock = NanoClock.systemDefaultZone();
-        var start = clock.nanos();
+        long start = 0;
 
         try (BufferedReader br = new BufferedReader(new FileReader("inputs/day" + this._day + ".txt"))) {
+            start = clock.nanos();
+
             String line = br.readLine();
 
             while (line != null) {
@@ -35,16 +37,20 @@ public abstract class BaseSolver {
 
         var lineProcessTimeDone = clock.nanos();
 
+        var part1Solution = this.SolvePart1();
+        var part1TimeDone = clock.nanos();
+
+        var part2Solution = this.SolvePart2();
+        var part2TimeDone = clock.nanos();
+
         System.out.println();
         System.out.println("Solution for day " + this._day);
         System.out.println();
         System.out.println("Part 1:");
-        System.out.println(this.SolvePart1());
-        var part1TimeDone = clock.nanos();
+        System.out.println(part1Solution);
         System.out.println();
         System.out.println("Part 2:");
-        System.out.println(this.SolvePart2());
-        var part2TimeDone = clock.nanos();
+        System.out.println(part2Solution);
 
         System.out.println();
         System.out.println();

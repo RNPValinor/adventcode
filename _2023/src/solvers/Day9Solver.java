@@ -1,11 +1,14 @@
 package solvers;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class Day9Solver extends BaseSolver {
+    private static final Pattern _numberPattern = Pattern.compile("(-?[0-9]+)");
+
     private int _nextInSequenceSum = 0;
 
     private int _previousInSequenceSum = 0;
@@ -16,9 +19,13 @@ public class Day9Solver extends BaseSolver {
 
     @Override
     protected void ProcessLine(String line) {
-        var sequence = Arrays.stream(line.split(" "))
-                .map(Integer::parseInt)
-                .toList();
+        var sequence = new LinkedList<Integer>();
+
+        var matcher = _numberPattern.matcher(line);
+
+        while (matcher.find()) {
+            sequence.add(Integer.parseInt(matcher.group(1)));
+        }
 
         var edges = this.getPrevAndNextForSequence(sequence);
 
