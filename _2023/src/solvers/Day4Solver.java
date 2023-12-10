@@ -16,7 +16,7 @@ public class Day4Solver extends BaseSolver {
     }
 
     @Override
-    protected void ProcessLine(String line) {
+    protected void processLine(String line) {
         var cardIdPattern = Pattern.compile("Card +([0-9]+): ");
         var cardIdMatcher = cardIdPattern.matcher(line);
         int cardId;
@@ -66,12 +66,12 @@ public class Day4Solver extends BaseSolver {
     }
 
     @Override
-    protected String SolvePart1() {
+    protected String solvePart1() {
         return String.valueOf(this.TotalPoints);
     }
 
     @Override
-    protected String SolvePart2() {
+    protected String solvePart2() {
         return String.valueOf(this.TotalNumScratchcards);
     }
 }

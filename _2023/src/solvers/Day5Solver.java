@@ -20,7 +20,7 @@ public class Day5Solver extends BaseSolver {
     }
 
     @Override
-    protected void ProcessLine(String line) {
+    protected void processLine(String line) {
         if (!this._hasParsedSeeds) {
             var matcher = this._seedPattern.matcher(line);
 
@@ -110,14 +110,14 @@ public class Day5Solver extends BaseSolver {
     }
 
     @Override
-    protected String SolvePart1() {
+    protected String solvePart1() {
         this.PromoteValues();
 
         return String.valueOf(Collections.min(this._currentValues));
     }
 
     @Override
-    protected String SolvePart2() {
+    protected String solvePart2() {
         this.PromoteValues();
 
         return String.valueOf(this._currentRanges.first().Start);

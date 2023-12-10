@@ -12,7 +12,7 @@ public class Day2Solver extends BaseSolver {
     }
 
     @Override
-    protected void ProcessLine(String line) {
+    protected void processLine(String line) {
         var game = new Day2Game(line);
 
         if (game.IsValid()) {
@@ -23,12 +23,12 @@ public class Day2Solver extends BaseSolver {
     }
 
     @Override
-    protected String SolvePart1() {
+    protected String solvePart1() {
         return String.valueOf(this.SumOfValidGameIds);
     }
 
     @Override
-    protected String SolvePart2() {
+    protected String solvePart2() {
         return String.valueOf(this.SumOfGamePowers);
     }
 }

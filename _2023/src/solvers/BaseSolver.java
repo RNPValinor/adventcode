@@ -24,7 +24,7 @@ public abstract class BaseSolver {
             String line = br.readLine();
 
             while (line != null) {
-                this.ProcessLine(line);
+                this.processLine(line);
                 line = br.readLine();
             }
         } catch (FileNotFoundException e) {
@@ -37,10 +37,10 @@ public abstract class BaseSolver {
 
         var lineProcessTimeDone = clock.nanos();
 
-        var part1Solution = this.SolvePart1();
+        var part1Solution = this.solvePart1();
         var part1TimeDone = clock.nanos();
 
-        var part2Solution = this.SolvePart2();
+        var part2Solution = this.solvePart2();
         var part2TimeDone = clock.nanos();
 
         System.out.println();
@@ -60,9 +60,9 @@ public abstract class BaseSolver {
         System.out.println("Total solve time: " + (part2TimeDone - start) + "ns");
     }
 
-    protected abstract void ProcessLine(String line);
+    protected abstract void processLine(String line);
 
-    protected abstract String SolvePart1();
+    protected abstract String solvePart1();
 
-    protected abstract String SolvePart2();
+    protected abstract String solvePart2();
 }

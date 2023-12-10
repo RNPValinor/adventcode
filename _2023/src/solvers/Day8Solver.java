@@ -14,7 +14,7 @@ public class Day8Solver extends BaseSolver {
     }
 
     @Override
-    protected void ProcessLine(String line) {
+    protected void processLine(String line) {
         if (this._instructions.isEmpty()) {
             for (var i = 0; i < line.length(); i++) {
                 switch (line.charAt(i)) {
@@ -36,7 +36,7 @@ public class Day8Solver extends BaseSolver {
     }
 
     @Override
-    protected String SolvePart1() {
+    protected String solvePart1() {
         var instructionIndex = 0;
         var curPos = "AAA";
         var numSteps = 0;
@@ -54,7 +54,7 @@ public class Day8Solver extends BaseSolver {
     }
 
     @Override
-    protected String SolvePart2() {
+    protected String solvePart2() {
         var numSteps = 1L;
 
         var nodes = this._map

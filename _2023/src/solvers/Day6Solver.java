@@ -20,7 +20,7 @@ public class Day6Solver extends BaseSolver {
     }
 
     @Override
-    protected void ProcessLine(String line) {
+    protected void processLine(String line) {
         var matcher = this._numberPattern.matcher(line);
 
         var bigNumberBuilder = new StringBuilder();
@@ -81,12 +81,12 @@ public class Day6Solver extends BaseSolver {
     }
 
     @Override
-    protected String SolvePart1() {
+    protected String solvePart1() {
         return String.valueOf(this._recordBeatingMult);
     }
 
     @Override
-    protected String SolvePart2() {
+    protected String solvePart2() {
         return String.valueOf(this._numberOfBigWins);
     }
 }

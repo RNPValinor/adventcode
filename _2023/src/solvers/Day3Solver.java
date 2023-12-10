@@ -20,7 +20,7 @@ public class Day3Solver extends BaseSolver {
     }
 
     @Override
-    protected void ProcessLine(String line) {
+    protected void processLine(String line) {
         StringBuilder currentNumber = new StringBuilder();
 
         var unmatchedNumbersOnLine = new ArrayList<PartNumber>();
@@ -134,12 +134,12 @@ public class Day3Solver extends BaseSolver {
 
 
     @Override
-    protected String SolvePart1() {
+    protected String solvePart1() {
         return String.valueOf(this.SumOfValidIds);
     }
 
     @Override
-    protected String SolvePart2() {
+    protected String solvePart2() {
         return String.valueOf(this.SumOfGearRatios);
     }
 

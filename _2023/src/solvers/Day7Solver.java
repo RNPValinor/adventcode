@@ -11,7 +11,7 @@ public class Day7Solver extends BaseSolver {
     }
 
     @Override
-    protected void ProcessLine(String line) {
+    protected void processLine(String line) {
         var cards = line.substring(0, 5);
         var wager = Integer.parseInt(line.substring(6));
 
@@ -20,7 +20,7 @@ public class Day7Solver extends BaseSolver {
     }
 
     @Override
-    protected String SolvePart1() {
+    protected String solvePart1() {
         var sortedHands = this._hands.stream().sorted(new HandComparator(false)).toList();
 
         var totalWinnings = 0;
@@ -35,7 +35,7 @@ public class Day7Solver extends BaseSolver {
     }
 
     @Override
-    protected String SolvePart2() {
+    protected String solvePart2() {
         var sortedHands = this._hands.stream().sorted(new HandComparator(true)).toList();
 
         var totalWinnings = 0;

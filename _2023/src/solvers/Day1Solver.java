@@ -14,7 +14,7 @@ public class Day1Solver extends BaseSolver {
     }
 
     @Override
-    protected void ProcessLine(String line) {
+    protected void processLine(String line) {
         // For part 1
         var intPattern = Pattern.compile("([0-9])");
         var intMatcher = intPattern.matcher(line);
@@ -82,7 +82,7 @@ public class Day1Solver extends BaseSolver {
     }
 
     @Override
-    protected String SolvePart1() {
+    protected String solvePart1() {
         var sum = 0;
 
         for (Integer calibrationValue : this._calibrationValuesPart1) {
@@ -93,7 +93,7 @@ public class Day1Solver extends BaseSolver {
     }
 
     @Override
-    protected String SolvePart2() {
+    protected String solvePart2() {
         var sum = 0;
 
         for (Integer calibrationValue : this._calibrationValuesPart2) {
