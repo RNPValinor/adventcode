@@ -45,14 +45,18 @@ public class Day11Solver extends BaseSolver {
     }
 
     private void doXExpansion() {
+        var cumulativeNumEmptyColumns = new int[this._emptyColumns.length];
+        cumulativeNumEmptyColumns[0] = 0;
+
+        for (var x = 1; x < this._emptyColumns.length; x++) {
+            cumulativeNumEmptyColumns[x] = cumulativeNumEmptyColumns[x - 1] + (this._emptyColumns[x - 1] ? 1 : 0);
+        }
+
         for (var i = 0; i < this._expandedGalaxies.size(); i++) {
             var g1 = this._expandedGalaxies.get(i);
             var g2 = this._superExpandedGalaxies.get(i);
 
-            var numToExpandBy = (int) Arrays.stream(this._emptyColumns)
-                    .limit(g1.x)
-                    .filter(c -> c)
-                    .count();
+            var numToExpandBy = cumulativeNumEmptyColumns[g1.x];
 
             g1.translate(numToExpandBy, 0);
             g2.translate(numToExpandBy * 999999, 0);
