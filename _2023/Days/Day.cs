@@ -37,20 +37,41 @@ public abstract class Day
         Console.WriteLine();
         Console.WriteLine("Processing input...");
 
+        var start = DateTime.UtcNow;
         this.ProcessInput();
+        var stop = DateTime.UtcNow;
+        var inputProcessTime = stop - start;
 
         Console.WriteLine();
         Console.WriteLine("Part 1:");
 
+        start = DateTime.UtcNow;
         this.SolvePart1();
+        stop = DateTime.UtcNow;
+        var part1SolveTime = stop - start;
 
         Console.WriteLine(this.Part1Solution);
         Console.WriteLine();
         Console.WriteLine("Part 2:");
 
+        start = DateTime.UtcNow;
         this.SolvePart2();
+        stop = DateTime.UtcNow;
+        var part2SolveTime = stop - start;
 
         Console.WriteLine(this.Part2Solution);
+
+        Console.WriteLine();
+        Console.WriteLine();
+        Console.WriteLine("Timings");
+        Console.WriteLine("Input processing: " + GetSensibleTimespanString(inputProcessTime));
+        Console.WriteLine("Part 1: " + GetSensibleTimespanString(part1SolveTime));
+        Console.WriteLine("Part 2: " + GetSensibleTimespanString(part2SolveTime));
+    }
+
+    private static string GetSensibleTimespanString(TimeSpan timeSpan)
+    {
+        return timeSpan.TotalMilliseconds + "ms";
     }
 
     protected abstract void ProcessInputLine(string line);
