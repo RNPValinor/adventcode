@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using _2023.Days;
+using _2023.Utils;
 using ConsoleTables;
 using Figgle;
 
@@ -19,15 +20,7 @@ else
 
     if (!int.TryParse(arg, out day))
     {
-        switch (arg)
-        {
-            case "a":
-            case "all":
-                benchmark = true;
-                break;
-            default:
-                throw new ArgumentException($"Unsupported argument: {arg}");
-        }
+        benchmark = true;
     }
 }
 
@@ -35,18 +28,41 @@ if (benchmark)
 {
     day = DateTime.UtcNow.Day;
 
-    var table = new ConsoleTable("Day", "Parsing", "Part 1", "Part 2", "Total");
+    var table = new ConsoleTable("Day", "Parsing", "Part 1", "Part 2", "Total", "SD");
+    const int numRepeats = 10;
 
     foreach (var d in Enumerable.Range(1, day))
     {
-        var daySolver = DayFactory.GetDay(d);
-        var result = daySolver.Solve();
+        Console.WriteLine($"Running day {d}");
 
-        table.AddRow(d, result.GetParseTime(), result.GetPart1SolveTime(), result.GetPart2SolveTime(),
-            result.GetTotalSolveTime());
+        var results = new HashSet<Result>();
+
+        for (var i = 0; i < numRepeats; i++)
+        {
+            var daySolver = DayFactory.GetDay(d);
+            results.Add(daySolver.Solve());    
+        }
+
+        var meanParseTime = results.Average(r => r.ParseTime.TotalMilliseconds);
+        var meanPart1Time = results.Average(r => r.Part1SolveTime.TotalMilliseconds);
+        var meanPart2Time = results.Average(r => r.Part2SolveTime.TotalMilliseconds);
+
+        var totalTimes = results
+            .Select(r => r.GetTotalTime().TotalMilliseconds)
+            .ToList();
+        
+        var meanTotalTime = totalTimes.Average();
+        var standardDeviation = Maths.StandardDeviation(totalTimes);
+
+        table.AddRow(d, $"{meanParseTime:0.####}ms", $"{meanPart1Time:0.####}ms", $"{meanPart2Time:0.####}ms",
+            $"{meanTotalTime:0.####}ms", $"{standardDeviation:0.####}");
     }
     
+    Console.WriteLine();
+    
     table.Write(Format.Alternative);
+
+    Console.WriteLine();
 }
 else
 {

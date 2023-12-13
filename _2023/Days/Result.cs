@@ -4,17 +4,17 @@ public class Result
 {
     private readonly string _part1Solution;
     private readonly string _part2Solution;
-    private readonly TimeSpan _parseTime;
-    private readonly TimeSpan _part1SolveTime;
-    private readonly TimeSpan _part2SolveTime;
+    public readonly TimeSpan ParseTime;
+    public readonly TimeSpan Part1SolveTime;
+    public readonly TimeSpan Part2SolveTime;
 
     public Result(string part1Solution, string part2Solution, TimeSpan parseTime, TimeSpan part1SolveTime, TimeSpan part2SolveTime)
     {
         this._part1Solution = part1Solution;
         this._part2Solution = part2Solution;
-        this._parseTime = parseTime;
-        this._part1SolveTime = part1SolveTime;
-        this._part2SolveTime = part2SolveTime;
+        this.ParseTime = parseTime;
+        this.Part1SolveTime = part1SolveTime;
+        this.Part2SolveTime = part2SolveTime;
     }
 
     public void LogToConsole()
@@ -26,30 +26,8 @@ public class Result
         Console.WriteLine(this._part2Solution);
     }
 
-    public string GetParseTime()
+    public TimeSpan GetTotalTime()
     {
-        return GetSensibleTimespanString(this._parseTime);
-    }
-
-    public string GetPart1SolveTime()
-    {
-        return GetSensibleTimespanString(this._part1SolveTime);
-    }
-    
-    public string GetPart2SolveTime()
-    {
-        return GetSensibleTimespanString(this._part2SolveTime);
-    }
-
-    public string GetTotalSolveTime()
-    {
-        var totalTime = this._parseTime + this._part1SolveTime + this._part2SolveTime;
-
-        return GetSensibleTimespanString(totalTime);
-    }
-    
-    private static string GetSensibleTimespanString(TimeSpan timeSpan)
-    {
-        return timeSpan.TotalMilliseconds + "ms";
+        return this.ParseTime + this.Part1SolveTime + this.Part2SolveTime;
     }
 }

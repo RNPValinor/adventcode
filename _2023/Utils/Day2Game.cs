@@ -60,6 +60,8 @@ public partial class Day2Game
                     numBlue = numBalls;
                     break;
             }
+
+            match = match.NextMatch();
         }
 
         // Part 1

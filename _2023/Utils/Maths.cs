@@ -21,4 +21,18 @@ public static class Maths
         var gcd = Gcd(number1, number2);
         return Math.Abs(number1 * number2) / gcd;
     }
+
+    public static double StandardDeviation(IList<double> sequence)
+    {
+        var result = 0d;
+
+        if (sequence.Any())
+        {
+            var average = sequence.Average();
+            var sum = sequence.Sum(d => Math.Pow(d - average, 2));
+            result = Math.Sqrt(sum / sequence.Count);
+        }
+
+        return result;
+    }
 }
