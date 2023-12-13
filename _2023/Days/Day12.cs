@@ -33,15 +33,17 @@ public class Day12 : Day
     {
         var numCombinations = 0L;
 
-        foreach (var (pattern, groupString) in this._rows)
+        Parallel.ForEach(this._rows, row =>
         {
+            var (pattern, groupString) = row;
+            
             var longPattern = Unfold(pattern, '?', repeat);
             var longGroupString = Unfold(groupString, ',', repeat);
 
             var groups = longGroupString.Split(',').Select(int.Parse);
 
             numCombinations += Compute(longPattern, ImmutableStack.CreateRange(groups.Reverse()), new());
-        }
+        });
 
         return numCombinations;
     }
