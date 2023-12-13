@@ -50,12 +50,12 @@ if (benchmark)
 }
 else
 {
+    Console.WriteLine(FiggleFonts.Keyboard.Render($"Advent of Code Day {day}"));
+    Console.WriteLine();
+    
     var daySolver = DayFactory.GetDay(day);
 
     var result = daySolver.Solve();
-
-    Console.WriteLine(FiggleFonts.Keyboard.Render($"Advent of Code Day {day}"));
-    Console.WriteLine();
 
     result.LogToConsole();
 }
