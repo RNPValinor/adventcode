@@ -106,109 +106,105 @@ public class Day14 : Day
         return this.RollEast(this.RollSouth(this.RollWest(this.RollNorth(current)))).ToImmutableHashSet();
     }
 
-    private IEnumerable<Point> RollNorth(IEnumerable<Point> current)
+    private HashSet<Point> RollNorth(IReadOnlySet<Point> current)
     {
         var next = new HashSet<Point>();
-        var nextFallPos = new Dictionary<int, int>();
-        
-        // North - ascending order of Y
-        foreach (var rock in current.OrderBy(r => r.Y))
-        {
-            var fallPos = nextFallPos.GetValueOrDefault(rock.X, 0);
-            
-            var obstacleCubes = this._cubicRocks
-                .Where(r => r.X == rock.X && r.Y < rock.Y)
-                .ToList();
 
-            if (obstacleCubes.Any())
-            {
-                var nextObstacleCube = obstacleCubes.MaxBy(r => r.Y);
-                fallPos = Math.Max(nextObstacleCube.Y + 1, fallPos);
-            }
+        for (var x = 0; x <= this._maxX; x++)
+        {
+            var fallPos = 0;
             
-            next.Add(rock with { Y = fallPos });
-            nextFallPos[rock.X] = fallPos + 1;
+            for (var y = 0; y <= this._maxY; y++)
+            {
+                var curPos = new Point(x, y);
+                
+                if (current.Contains(curPos))
+                {
+                    next.Add(new(x, fallPos++));
+                }
+                else if (this._cubicRocks.Contains(curPos))
+                {
+                    fallPos = y + 1;
+                }
+            }
+        }
+
+        return next;
+    }
+    
+    private HashSet<Point> RollSouth(IReadOnlySet<Point> current)
+    {
+        var next = new HashSet<Point>();
+
+        for (var x = 0; x <= this._maxX; x++)
+        {
+            var fallPos = this._maxY;
+            
+            for (var y = this._maxY; y >= 0; y--)
+            {
+                var curPos = new Point(x, y);
+                
+                if (current.Contains(curPos))
+                {
+                    next.Add(new(x, fallPos--));
+                }
+                else if (this._cubicRocks.Contains(curPos))
+                {
+                    fallPos = y - 1;
+                }
+            }
         }
 
         return next;
     }
 
-    private IEnumerable<Point> RollWest(IEnumerable<Point> current)
+    private HashSet<Point> RollWest(IReadOnlySet<Point> current)
     {
         var next = new HashSet<Point>();
-        var nextFallPos = new Dictionary<int, int>();
-        
-        // West - ascending order of X
-        foreach (var rock in current.OrderBy(r => r.X))
-        {
-            var fallPos = nextFallPos.GetValueOrDefault(rock.Y, 0);
-            
-            var obstacleCubes = this._cubicRocks
-                .Where(r => r.Y == rock.Y && r.X < rock.X)
-                .ToList();
 
-            if (obstacleCubes.Any())
-            {
-                var nextObstacleCube = obstacleCubes.MaxBy(r => r.X);
-                fallPos = Math.Max(nextObstacleCube.X + 1, fallPos);
-            }
+        for (var y = 0; y <= this._maxY; y++)
+        {
+            var fallPos = 0;
             
-            next.Add(rock with { X = fallPos });
-            nextFallPos[rock.Y] = fallPos + 1;
+            for (var x = 0; x <= this._maxX; x++)
+            {
+                var curPos = new Point(x, y);
+                
+                if (current.Contains(curPos))
+                {
+                    next.Add(new(fallPos++, y));
+                }
+                else if (this._cubicRocks.Contains(curPos))
+                {
+                    fallPos = x + 1;
+                }
+            }
         }
 
         return next;
     }
 
-    private IEnumerable<Point> RollSouth(IEnumerable<Point> current)
+    private HashSet<Point> RollEast(IReadOnlySet<Point> current)
     {
         var next = new HashSet<Point>();
-        var nextFallPos = new Dictionary<int, int>();
-        
-        // South - descending order of X
-        foreach (var rock in current.OrderByDescending(r => r.Y))
+
+        for (var y = 0; y <= this._maxY; y++)
         {
-            var fallPos = nextFallPos.GetValueOrDefault(rock.X, this._maxY);
+            var fallPos = this._maxX;
             
-            var obstacleCubes = this._cubicRocks
-                .Where(r => r.X == rock.X && r.Y > rock.Y)
-                .ToList();
-
-            if (obstacleCubes.Any())
+            for (var x = this._maxX; x >= 0; x--)
             {
-                var nextObstacleCube = obstacleCubes.MinBy(r => r.Y);
-                fallPos = Math.Min(nextObstacleCube.Y - 1, fallPos);
+                var curPos = new Point(x, y);
+                
+                if (current.Contains(curPos))
+                {
+                    next.Add(new(fallPos--, y));
+                }
+                else if (this._cubicRocks.Contains(curPos))
+                {
+                    fallPos = x - 1;
+                }
             }
-            
-            next.Add(rock with { Y = fallPos });
-            nextFallPos[rock.X] = fallPos - 1;
-        }
-
-        return next;
-    }
-
-    private IEnumerable<Point> RollEast(IEnumerable<Point> current)
-    {
-        var next = new HashSet<Point>();
-        var nextFallPos = new Dictionary<int, int>();
-        
-        // North - ascending order of Y
-        foreach (var rock in current.OrderByDescending(r => r.X))
-        {
-            var fallPos = nextFallPos.GetValueOrDefault(rock.Y, this._maxX);
-            
-            var obstacleCubes = this._cubicRocks
-                .Where(r => r.Y == rock.Y && r.X > rock.X)
-                .ToList();
-
-            if (obstacleCubes.Any())
-            {
-                var nextObstacleCube = obstacleCubes.MinBy(r => r.X);
-                fallPos = Math.Min(nextObstacleCube.X - 1, fallPos);
-            }
-            
-            next.Add(rock with { X = fallPos });
-            nextFallPos[rock.Y] = fallPos - 1;
         }
 
         return next;
