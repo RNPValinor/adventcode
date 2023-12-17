@@ -2,14 +2,10 @@ using _2023.Utils;
 
 namespace _2023.Days;
 
-public class Day13 : Day
+public class Day13() : Day(13)
 {
-    private readonly List<Day13Pattern> _patterns = new();
+    private readonly List<Day13Pattern> _patterns = [];
     private Day13Pattern? _currentPattern;
-    
-    public Day13() : base(13)
-    {
-    }
 
     protected override void ProcessInputLine(string line)
     {

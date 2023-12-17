@@ -2,18 +2,14 @@ using System.Text.RegularExpressions;
 
 namespace _2023.Days;
 
-public partial class Day5 : Day
+public partial class Day5() : Day(5)
 {
     private bool _hasParsedSeeds;
-    private readonly HashSet<long> _currentValues = new();
-    private readonly HashSet<long> _nextValues = new();
+    private readonly HashSet<long> _currentValues = [];
+    private readonly HashSet<long> _nextValues = [];
 
-    private readonly SortedSet<Range> _currentRanges = new();
-    private readonly List<Range> _nextRanges = new();
-
-    public Day5() : base(5)
-    {
-    }
+    private readonly SortedSet<Range> _currentRanges = [];
+    private readonly List<Range> _nextRanges = [];
 
     protected override void ProcessInputLine(string line)
     {
@@ -126,14 +122,10 @@ public partial class Day5 : Day
         this.Part2Solution = this._currentRanges.First().Start.ToString();
     }
     
-    private class Range : IComparable<Range> {
-        public readonly long Start;
-        public readonly long End;
-
-        public Range(long start, long end) {
-            this.Start = start;
-            this.End = end;
-        }
+    private class Range(long start, long end) : IComparable<Range>
+    {
+        public readonly long Start = start;
+        public readonly long End = end;
 
         public bool Overlaps(Range range) {
             return this.Start <= range.End && this.End >= range.Start;

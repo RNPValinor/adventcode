@@ -2,21 +2,17 @@ using System.Text;
 
 namespace _2023.Days;
 
-public class Day3 : Day
+public class Day3() : Day(3)
 {
-    private List<int> _lastLineSymbols = new();
-    private List<PartNumber> _unmatchedLastLineNumbers = new();
+    private List<int> _lastLineSymbols = [];
+    private List<PartNumber> _unmatchedLastLineNumbers = [];
 
-    private List<PartNumber> _lastLineNumbers = new();
-    private List<PartNumber> _secondLastLineNumbers = new();
-    private List<int> _lastLineCogs = new();
+    private List<PartNumber> _lastLineNumbers = [];
+    private List<PartNumber> _secondLastLineNumbers = [];
+    private List<int> _lastLineCogs = [];
 
     private int _sumOfValidIds;
     private int _sumOfGearRatios;
-    
-    public Day3() : base(3)
-    {
-    }
 
     protected override void ProcessInputLine(string line)
     {
@@ -139,15 +135,10 @@ public class Day3 : Day
         this.Part2Solution = this._sumOfGearRatios.ToString();
     }
     
-    private class PartNumber {
-        public readonly int Id;
-        public readonly int StartX;
-        public readonly int EndX;
-
-        public PartNumber(int id, int startX, int endX) {
-            this.Id = id;
-            this.StartX = startX;
-            this.EndX = endX;
-        }
+    private class PartNumber(int id, int startX, int endX)
+    {
+        public readonly int Id = id;
+        public readonly int StartX = startX;
+        public readonly int EndX = endX;
     }
 }

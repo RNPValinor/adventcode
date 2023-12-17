@@ -4,13 +4,9 @@ using Cache = System.Collections.Generic.Dictionary<(string, System.Collections.
 
 namespace _2023.Days;
 
-public class Day12 : Day
+public class Day12() : Day(12)
 {
-    private readonly List<(string pattern, string numString)> _rows = new();
-    
-    public Day12() : base(12)
-    {
-    }
+    private readonly List<(string pattern, string numString)> _rows = [];
 
     protected override void ProcessInputLine(string line)
     {

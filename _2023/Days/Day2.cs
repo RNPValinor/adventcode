@@ -2,13 +2,9 @@ using _2023.Utils;
 
 namespace _2023.Days;
 
-public class Day2 : Day
+public class Day2() : Day(2)
 {
-    private readonly HashSet<Day2Game> _games = new();
-    
-    public Day2() : base(2)
-    {
-    }
+    private readonly HashSet<Day2Game> _games = [];
 
     protected override void ProcessInputLine(string line)
     {

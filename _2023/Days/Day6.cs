@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace _2023.Days;
 
-public partial class Day6 : Day
+public partial class Day6() : Day(6)
 {
     private readonly Queue<int> _times = new();
 
@@ -11,10 +11,6 @@ public partial class Day6 : Day
 
     private int _recordBeatingMult = 1;
     private int _numberOfBigWins = -1;
-    
-    public Day6() : base(6)
-    {
-    }
 
     protected override void ProcessInputLine(string line)
     {

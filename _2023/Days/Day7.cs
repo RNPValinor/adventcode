@@ -2,13 +2,9 @@ using System.Collections.Concurrent;
 
 namespace _2023.Days;
 
-public class Day7 : Day
+public class Day7() : Day(7)
 {
-    private readonly HashSet<Hand> _hands = new();
-    
-    public Day7() : base(7)
-    {
-    }
+    private readonly HashSet<Hand> _hands = [];
 
     protected override void ProcessInputLine(string line)
     {

@@ -3,17 +3,13 @@ using System.Text.RegularExpressions;
 
 namespace _2023.Days;
 
-public partial class Day4 : Day
+public partial class Day4() : Day(4)
 {
     private int _totalPoints;
     
     private int _totalNumScratchcards;
     
     private readonly ConcurrentDictionary<int, int> _scratchcardCopies = new();
-    
-    public Day4() : base(4)
-    {
-    }
 
     protected override void ProcessInputLine(string line)
     {

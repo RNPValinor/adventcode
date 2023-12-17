@@ -2,15 +2,11 @@ using _2023.Utils;
 
 namespace _2023.Days;
 
-public class Day8 : Day
+public class Day8() : Day(8)
 {
     private readonly Dictionary<string, string[]> _map = new();
     
-    private readonly List<int> _instructions = new();
-    
-    public Day8() : base(8)
-    {
-    }
+    private readonly List<int> _instructions = [];
 
     protected override void ProcessInputLine(string line)
     {

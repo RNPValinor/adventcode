@@ -2,20 +2,16 @@ using System.Drawing;
 
 namespace _2023.Days;
 
-public class Day11 : Day
+public class Day11() : Day(11)
 {
-    private readonly List<Point> _expandedGalaxies = new();
-    private readonly List<Point> _superExpandedGalaxies = new();
+    private readonly List<Point> _expandedGalaxies = [];
+    private readonly List<Point> _superExpandedGalaxies = [];
 
     private int _numEmptyRows;
-    private readonly HashSet<int> _nonEmptyColumns = new();
+    private readonly HashSet<int> _nonEmptyColumns = [];
 
     private int _numColumns;
     private int _y;
-    
-    public Day11() : base(11)
-    {
-    }
 
     protected override void ProcessInputLine(string line)
     {

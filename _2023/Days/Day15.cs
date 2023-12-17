@@ -2,13 +2,9 @@ using System.Collections.Concurrent;
 
 namespace _2023.Days;
 
-public class Day15 : Day
+public class Day15() : Day(15)
 {
     private string _input = "";
-    
-    public Day15() : base(15)
-    {
-    }
 
     protected override void ProcessInputLine(string line)
     {
@@ -93,7 +89,7 @@ public class Day15 : Day
     private static void ProcessLens(string label, int boxNum, bool isAdding, int focalPower,
         ConcurrentDictionary<int, LinkedList<Lens>> boxes)
     {
-        var box = boxes.GetOrAdd(boxNum, _ => new());
+        var box = boxes.GetOrAdd(boxNum, _ => []);
 
         if (isAdding is false)
         {
@@ -141,16 +137,10 @@ public class Day15 : Day
         return totalFocusingPower;
     }
 
-    private class Lens
+    private class Lens(string label, int focalPower)
     {
-        public string Label { get; }
-        
-        public int FocalPower { get; set; }
+        public string Label { get; } = label;
 
-        public Lens(string label, int focalPower)
-        {
-            this.Label = label;
-            this.FocalPower = focalPower;
-        }
+        public int FocalPower { get; set; } = focalPower;
     }
 }

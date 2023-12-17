@@ -2,7 +2,7 @@ using System.Drawing;
 
 namespace _2023.Days;
 
-public class Day10 : Day
+public class Day10() : Day(10)
 {
     private readonly Dictionary<Point, Point[]> _map = new();
     private readonly Dictionary<Point, PipeType> _pipeMap = new();
@@ -10,16 +10,12 @@ public class Day10 : Day
     private int _y;
     private int _maxX;
 
-    private readonly HashSet<Point> _path = new();
+    private readonly HashSet<Point> _path = [];
 
-    private readonly HashSet<Point> _oneSide = new();
-    private readonly HashSet<Point> _twoSide = new();
+    private readonly HashSet<Point> _oneSide = [];
+    private readonly HashSet<Point> _twoSide = [];
 
     private Point _startPoint = new(-1, -1);
-    
-    public Day10() : base(10)
-    {
-    }
 
     protected override void ProcessInputLine(string line)
     {

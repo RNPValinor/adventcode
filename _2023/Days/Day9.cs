@@ -2,15 +2,11 @@ using System.Text.RegularExpressions;
 
 namespace _2023.Days;
 
-public partial class Day9 : Day
+public partial class Day9() : Day(9)
 {
     private int _nextInSequenceSum;
 
     private int _previousInSequenceSum;
-    
-    public Day9() : base(9)
-    {
-    }
 
     protected override void ProcessInputLine(string line)
     {

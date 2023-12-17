@@ -1,15 +1,15 @@
+using _2023.Utils;
+
+using Beam = (int x, int y, _2023.Utils.Directions d);
+
 namespace _2023.Days;
 
-public class Day16 : Day
+public class Day16() : Day(16)
 {
     private string _grid = "";
 
     private int _rowLength;
     private int _columnLength;
-    
-    public Day16() : base(16)
-    {
-    }
 
     protected override void ProcessInputLine(string line)
     {
@@ -30,9 +30,9 @@ public class Day16 : Day
         this.Part1Solution = numVisited.ToString();
     }
 
-    private int GetNumVisitedPointsFromStartBeam((int x, int y, Directions d) startBeam)
+    private int GetNumVisitedPointsFromStartBeam(Beam startBeam)
     {
-        var beams = new Queue<(int x, int y, Directions d)>();
+        var beams = new Queue<Beam>();
         beams.Enqueue((startBeam.x, startBeam.y, startBeam.d));
 
         var visited = new Dictionary<(int x, int y), Directions>();
@@ -67,7 +67,7 @@ public class Day16 : Day
         return visited.Count - 1;
     }
 
-    private void EnqueueNextBeams(int x, int y, Directions d, Queue<(int x, int y, Directions d)> beams)
+    private void EnqueueNextBeams(int x, int y, Directions d, Queue<Beam> beams)
     {
         var tile = this._grid[this.ConvertCoordsToGridIndex(x, y)];
         Directions nextD;
@@ -126,7 +126,7 @@ public class Day16 : Day
         }
     }
 
-    private static (int x, int y) GetNextPoint((int x, int y, Directions d) beam)
+    private static (int x, int y) GetNextPoint(Beam beam)
     {
         return beam.d switch {
             Directions.North => (beam.x, beam.y - 1),
@@ -144,7 +144,7 @@ public class Day16 : Day
 
     protected override void SolvePart2()
     {
-        var startBeams = new HashSet<(int x, int y, Directions d)>();
+        var startBeams = new HashSet<Beam>();
 
         for (var x = 0; x < this._rowLength; x++)
         {
@@ -166,14 +166,5 @@ public class Day16 : Day
         });
         
         this.Part2Solution = energyValues.Max().ToString();
-    }
-
-    [Flags]
-    private enum Directions
-    {
-        North = 1,
-        South = 2,
-        East = 4,
-        West = 8
     }
 }

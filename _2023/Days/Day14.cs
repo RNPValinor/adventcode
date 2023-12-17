@@ -2,7 +2,7 @@ using System.Text;
 
 namespace _2023.Days;
 
-public class Day14 : Day
+public class Day14() : Day(14)
 {
     private string _initialState = "";
 
@@ -11,10 +11,6 @@ public class Day14 : Day
 
     private int _numColumns;
     private int _numRows;
-    
-    public Day14() : base(14)
-    {
-    }
 
     protected override void ProcessInputLine(string line)
     {

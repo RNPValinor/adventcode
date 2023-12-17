@@ -2,14 +2,10 @@ using System.Text.RegularExpressions;
 
 namespace _2023.Days;
 
-public partial class Day1 : Day
+public partial class Day1() : Day(1)
 {
     private readonly IList<int> _part1CalibrationValues = new List<int>();
     private readonly IList<int> _part2CalibrationValues = new List<int>();
-    
-    public Day1() : base(1)
-    {
-    }
 
     protected override void ProcessInputLine(string line)
     {
