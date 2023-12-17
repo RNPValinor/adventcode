@@ -1,19 +1,13 @@
 namespace _2023.Days;
 
-public abstract class Day
+public abstract class Day(int dayNum)
 {
-    private readonly int _dayNum;
     protected string Part1Solution = "";
     protected string Part2Solution = "";
 
-    protected Day(int dayNum)
-    {
-        this._dayNum = dayNum;
-    }
-
     private void ProcessInput()
     {
-        var fileName = $"Inputs/day{this._dayNum}.txt";
+        var fileName = $"Inputs/day{dayNum}.txt";
         var filePath = Path.Combine(Environment.CurrentDirectory, fileName);
 
         if (!File.Exists(filePath)) throw new FileNotFoundException("Failed to find input file", filePath);
