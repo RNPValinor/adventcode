@@ -27,7 +27,7 @@ public class Day12() : Day(12)
 
     private long Solve(int repeat)
     {
-        var numCombinations = this._rows.Sum(row => {
+        var numCombinations = this._rows.AsParallel().Sum(row => {
             var (pattern, groupString) = row;
             
             var longPattern = Unfold(pattern, '?', repeat);
