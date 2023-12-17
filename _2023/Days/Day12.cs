@@ -27,10 +27,7 @@ public class Day12() : Day(12)
 
     private long Solve(int repeat)
     {
-        var numCombinations = 0L;
-
-        Parallel.ForEach(this._rows, row =>
-        {
+        var numCombinations = this._rows.Sum(row => {
             var (pattern, groupString) = row;
             
             var longPattern = Unfold(pattern, '?', repeat);
@@ -38,7 +35,7 @@ public class Day12() : Day(12)
 
             var groups = longGroupString.Split(',').Select(int.Parse);
 
-            numCombinations += Compute(longPattern, ImmutableStack.CreateRange(groups.Reverse()), new());
+            return Compute(longPattern, ImmutableStack.CreateRange(groups.Reverse()), new());
         });
 
         return numCombinations;
