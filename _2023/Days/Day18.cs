@@ -1,19 +1,14 @@
 using System.Globalization;
-using _2023.Utils;
 
 namespace _2023.Days;
 
 public class Day18() : Day(18)
 {
-    private readonly Dictionary<(int x, int y), Directions> _simpleCornerTypes = new();
-    private readonly Dictionary<int, SortedSet<int>> _simpleHoleEdges = new();
-    private Directions _simpleLastDirection = Directions.None;
-    private (int x, int y) _simpleCurPos = (0, 0);
-    
-    private readonly Dictionary<(int x, int y), Directions> _complexCornerTypes = new();
-    private readonly Dictionary<int, SortedSet<int>> _complexHoleEdges = new();
-    private Directions _complexLastDirection = Directions.None;
-    private (int x, int y) _complexCurPos = (0, 0);
+    private readonly List<(long x, long y)> _simpleVertices = [(0, 0)];
+    private (long x, long y) _simpleCurPos = (0, 0);
+
+    private readonly List<(long x, long y)> _complexVertices = [(0, 0)];
+    private (long x, long y) _complexCurPos = (0, 0);
 
     protected override void ProcessInputLine(string line)
     {
@@ -23,181 +18,68 @@ public class Day18() : Day(18)
 
     private void ProcessLineBasic(string line)
     {
-        var direction = line[0] switch
+        var distance = int.Parse(string.Join(null, line[2..].TakeWhile(c => c is >= '0' and <= '9')));
+        
+        this._simpleCurPos = line[0] switch
         {
-            'U' => Directions.North,
-            'D' => Directions.South,
-            'L' => Directions.West,
-            'R' => Directions.East,
+            'D' => this._simpleCurPos with { y = this._simpleCurPos.y + distance },
+            'U' => this._simpleCurPos with { y = this._simpleCurPos.y - distance },
+            'R' => this._simpleCurPos with { x = this._simpleCurPos.x + distance },
+            'L' => this._simpleCurPos with { x = this._simpleCurPos.x - distance },
             _ => throw new ArgumentOutOfRangeException(nameof(line), line, "Unexpected direction")
         };
-
-        var distance = int.Parse(string.Join(null, line[2..].TakeWhile(c => c is >= '0' and <= '9')));
-
-        this._simpleCurPos = DoMove(direction, distance, this._simpleCurPos, this._simpleLastDirection, this._simpleCornerTypes, this._simpleHoleEdges);
         
-        this._simpleLastDirection = direction;
+        this._simpleVertices.Add(this._simpleCurPos);
     }
 
     private void ProcessLineComplex(string line)
     {
-        var direction = line[^2] switch
-        {
-            '0' => Directions.East,
-            '1' => Directions.South,
-            '2' => Directions.West,
-            '3' => Directions.North,
-            _ => Directions.None
-        };
-
         var distance = int.Parse(line.Substring(line.Length - 7, 5), NumberStyles.HexNumber);
 
-        this._complexCurPos = DoMove(direction, distance, this._complexCurPos, this._complexLastDirection, this._complexCornerTypes, this._complexHoleEdges);
-
-        this._complexLastDirection = direction;
-    }
-
-    private static (int x, int y) DoMove(Directions direction, int distance, (int x, int y) curPos, Directions lastDirection, Dictionary<(int x, int y), Directions> cornerTypes, Dictionary<int, SortedSet<int>> holeEdges)
-    {
-        if (lastDirection is not Directions.None)
+        this._complexCurPos = line[^2] switch
         {
-            cornerTypes.Add(curPos, GetCornerType(lastDirection, direction));
-        }
-
-        int dy;
-
-        if (direction is Directions.North or Directions.South)
-        {
-            for (dy = 0; dy <= distance; dy++)
-            {
-                AddPointToPathEdge(curPos with { y = direction is Directions.North ? curPos.y - dy : curPos.y + dy }, holeEdges);
-            }
-        }
-
-        var dx = direction switch
-        {
-            Directions.East => distance,
-            Directions.West => -distance,
-            _ => 0
+            '0' => this._complexCurPos with { x = this._complexCurPos.x + distance },
+            '2' => this._complexCurPos with { x = this._complexCurPos.x - distance },
+            '1' => this._complexCurPos with { y = this._complexCurPos.y + distance },
+            '3' => this._complexCurPos with { y = this._complexCurPos.y - distance },
+            _ => throw new ArgumentException($"Invalid line {line}", nameof(line))
         };
         
-        dy = direction switch
-        {
-            Directions.South => distance,
-            Directions.North => -distance,
-            _ => 0
-        };
-
-        return (curPos.x + dx, curPos.y + dy);
-    }
-
-    private static Directions GetCornerType(Directions d1, Directions d2)
-    {
-        return d1 switch
-        {
-            Directions.North => Directions.South,
-            Directions.South => Directions.North,
-            Directions.East => d2 switch
-            {
-                Directions.North => Directions.North,
-                Directions.South => Directions.South,
-                _ => throw new ArgumentException($"Invalid direction combo {d1} and {d2}")
-            },
-            Directions.West => d2 switch
-            {
-                Directions.North => Directions.North,
-                Directions.South => Directions.South,
-                _ => throw new ArgumentException($"Invalid direction combo {d1} and {d2}")
-            },
-            _ => throw new ArgumentOutOfRangeException(nameof(d1), d1, null)
-        };
-    }
-
-    private static void AddPointToPathEdge((int x, int y) p, Dictionary<int, SortedSet<int>> holeEdges)
-    {
-        if (holeEdges.TryGetValue(p.y, out var xes))
-        {
-            xes.Add(p.x);
-        }
-        else
-        {
-            holeEdges[p.y] = [p.x];
-        }
+        this._complexVertices.Add(this._complexCurPos);
     }
 
     protected override void SolvePart1()
     {
-        this._simpleCornerTypes.Add((0, 0), this._simpleLastDirection is Directions.South ? Directions.North : Directions.South);
-
-        var holeSize = GetHoleSize(this._simpleHoleEdges, this._simpleCornerTypes);
-
-        this.Part1Solution = holeSize.ToString();
+        this.Part1Solution = GetShapeArea(this._simpleVertices).ToString();
     }
 
     protected override void SolvePart2()
     {
-        this._complexCornerTypes.Add((0, 0), this._complexLastDirection is Directions.South ? Directions.North : Directions.South);
-        
-        var holeSize = GetHoleSize(this._complexHoleEdges, this._complexCornerTypes);
-        
-        this.Part2Solution = holeSize.ToString();
-    }
-    
-    private static long GetHoleSize(Dictionary<int, SortedSet<int>> holeEdges, Dictionary<(int x, int y), Directions> corners)
-    {
-        return holeEdges.AsParallel().Sum(kvp => GetLineSize(corners, kvp.Value, kvp.Key));
+        this.Part2Solution = GetShapeArea(this._complexVertices).ToString();
     }
 
-    private static long GetLineSize(Dictionary<(int x, int y), Directions> corners, SortedSet<int> xes, int y)
+    private static long GetShapeArea(IReadOnlyList<(long x, long y)> vertices)
     {
-        var isInside = false;
-        var lastEdge = 0;
-        var lastCornerType = Directions.None;
-        var lineSize = 0L;
+        var perimeter = 0L;
+        var area = 0L;
 
-        foreach (var x in xes)
+        for (var i = 0; i < vertices.Count - 1; i++)
         {
-            if (corners.TryGetValue((x, y), out var corner))
-            {
-                if (lastCornerType is Directions.None)
-                {
-                    if (isInside)
-                    {
-                        lineSize += x - lastEdge - 1;
-                    }
-                        
-                    lastCornerType = corner;
-                }
-                else
-                {
-                    lineSize += x - lastEdge + 1;
+            var pCur = vertices[i];
+            var pNext = vertices[i + 1];
+            
+            perimeter += Math.Abs(pNext.x - pCur.x) + Math.Abs(pNext.y - pCur.y);
 
-                    if (lastCornerType != corner)
-                    {
-                        isInside = !isInside;
-                    }
-
-                    lastCornerType = Directions.None;
-                }
-            }
-            else
-            {
-                // Not a corner; check to see if we were just inside
-                if (isInside)
-                {
-                    lineSize += x - lastEdge;
-                }
-                else
-                {
-                    lineSize++;
-                }
-
-                isInside = !isInside;
-            }
-                
-            lastEdge = x;
+            area += Determinant(pCur, pNext);
         }
 
-        return lineSize;
+        area = Math.Abs(area);
+
+        return (area + perimeter) / 2 + 1;
+    }
+
+    private static long Determinant((long x, long y) p1, (long x, long y) p2)
+    {
+        return p1.x * p2.y - p2.x * p1.y;
     }
 }
