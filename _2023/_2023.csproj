@@ -13,6 +13,7 @@
         <PackageReference Include="Figgle" Version="0.5.1" />
         <PackageReference Include="MZMemoize" Version="1.0.0" />
         <PackageReference Include="QuikGraph" Version="2.5.0" />
+        <PackageReference Include="QuikGraph.Graphviz" Version="2.5.0" />
         <PackageReference Include="ShellProgressBar" Version="5.2.0" />
         <PackageReference Include="VectorAndPoint.NetStandard" Version="1.2.20" />
     </ItemGroup>
